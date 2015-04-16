@@ -1,3 +1,5 @@
+# See URL below for more documentation on ExternalProject
+# http://www.cmake.org/cmake/help/v3.0/module/ExternalProject.html
 
 ExternalProject_Add(libfunctionality
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libfunctionality"
