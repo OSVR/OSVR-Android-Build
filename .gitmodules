@@ -1,3 +1,9 @@
 [submodule "android-cmake"]
 	path = android-cmake
 	url = https://github.com/OSVR/android-cmake.git
+[submodule "src/libfunctionality"]
+	path = src/libfunctionality
+	url = https://github.com/OSVR/libfunctionality.git
+[submodule "src/jsoncpp"]
+	path = src/jsoncpp
+	url = https://github.com/vrpn/jsoncpp.git
