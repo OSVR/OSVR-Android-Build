@@ -107,4 +107,10 @@ if(WIN32)
     # todo find ninja
 endif()
 
+###
+# Find other host programs
+###
+find_package(PythonInterp REQUIRED)
+
+# Go into the subdirectory with the projects in it
 add_subdirectory(src)
