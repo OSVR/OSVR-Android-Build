@@ -3,9 +3,9 @@ project(OSVR-Android LANGUAGES)
 
 include(ExternalProject)
 
-set(ANDROID_TOOLCHAIN "${CMAKE_CURRENT_SOURCE_DIR}/android-cmake/android.toolchain.cmake")
-file(TO_NATIVE_PATH "${ANDROID_TOOLCHAIN}" ANDROID_TOOLCHAIN_NATIVE_PATH)
-
+###
+# Configuration
+###
 if(NOT ANDROID_ABI)
     set(ANDROID_ABI "armeabi-v7a" CACHE STRING "Android ABI to build all projects with - see android-cmake docs for details")
     set_property(CACHE ANDROID_ABI PROPERTY STRINGS "armeabi" "armeabi-v7a" "armeabi-v7a with NEON" "armeabi-v7a with VFPV3" "armeabi-v6 with VFP" "x86" "mips" "arm64-v8a" "x86_64" "mips64")
@@ -21,16 +21,24 @@ if(NOT ANDROID_GENERATOR)
     endif()
 endif()
 
-if(ENV{ANDROID_NDK})
-    set(ANDROID_NDK_HINT $ENV{ANDROID_NDK})
-elseif(ANDROID_NDK)
+
+
+
+###
+# NDK finding - using environment and CMake variables as a hint
+###
+if(NOT ANDROID_NDK)
+    set(ANDROID_NDK $ENV{ANDROID_NDK} CACHE PATH "The root directory of an Android NDK")
+endif()
+
+if(ANDROID_NDK)
     set(ANDROID_NDK_HINT ${ANDROID_NDK})
 endif()
 
 find_program(ANDROID_NDK_BUILD
     NAMES
-    ndk-build
     ndk-build.cmd
+    ndk-build
     HINTS
     ${ANDROID_NDK_HINT}
     DOC "Root directory of android NDK")
@@ -39,10 +47,9 @@ if(NOT ANDROID_NDK_BUILD)
     message(FATAL_ERROR "Need the Android NDK path set, by finding the ndk-build command!")
 endif()
 
-get_filename_component(ANDROID_NDK ${ANDROID_NDK_BUILD} DIRECTORY)
-
-set(ANDROID_INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/install")
-
+###
+# Build config handling
+###
 if(NOT CMAKE_CONFIGURATION_TYPES)
     # Single config generator
     if(NOT CMAKE_BUILD_TYPE)
@@ -59,8 +66,20 @@ if(NOT CMAKE_CONFIGURATION_TYPES)
     message(STATUS "Android build config: ${ANDROID_BUILD_TYPE}")
 else()
     # Multi-config generator - will need generator expression
+    set(CMAKE_CONFIGURATION_TYPES "Release;Debug" CACHE STRING "" FORCE)
     set(ANDROID_BUILD_TYPE $<CONFIG>)
 endif()
+
+###
+# Setting some variables and properties
+###
+set(ANDROID_TOOLCHAIN "${CMAKE_CURRENT_SOURCE_DIR}/android-cmake/android.toolchain.cmake")
+file(TO_NATIVE_PATH "${ANDROID_TOOLCHAIN}" ANDROID_TOOLCHAIN_NATIVE_PATH)
+
+set(ANDROID_INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/install")
+set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${ANDROID_INSTALL_DIR}")
+
+get_filename_component(ANDROID_NDK ${ANDROID_NDK_BUILD} DIRECTORY CACHE)
 
 set(COMMON_CMAKE_ARGS
     "-DCMAKE_INSTALL_PREFIX=${ANDROID_INSTALL_DIR}"
@@ -69,6 +88,9 @@ set(COMMON_CMAKE_ARGS
     "-DANDROID_ABI:STRING=${ANDROID_ABI}"
     "-DCMAKE_BUILD_TYPE=${ANDROID_BUILD_TYPE}")
 
+###
+# Find make
+###
 if(WIN32)
     if("${ANDROID_GENERATOR}" STREQUAL "MinGW Makefiles")
         find_program(ANDROID_NDK_MAKE
@@ -80,7 +102,7 @@ if(WIN32)
         if(NOT ANDROID_NDK_MAKE)
             message(FATAL_ERROR "Need the location of a make executable - usually bundled with the NDK!")
         endif()
-        list(APPEND COMMON_CMAKE_ARGS -DCMAKE_MAKE_PROGRAM="${ANDROID_NDK_MAKE}")
+        list(APPEND COMMON_CMAKE_ARGS "-DCMAKE_MAKE_PROGRAM=${ANDROID_NDK_MAKE}")
     endif()
     # todo find ninja
 endif()
