@@ -7,3 +7,15 @@
 [submodule "src/jsoncpp"]
 	path = src/jsoncpp
 	url = https://github.com/vrpn/jsoncpp.git
+[submodule "src/boost"]
+	path = src/boost
+	url = https://github.com/MysticTreeGames/Boost-for-Android
+[submodule "src/hidapi"]
+	path = src/hidapi
+	url = https://github.com/signal11/hidapi
+[submodule "src/libusb"]
+	path = src/libusb
+	url = https://github.com/libusb/libusb
+[submodule "src/OSVR-Core"]
+	path = src/OSVR-Core
+	url = https://github.com/OSVR/OSVR-Core.git
