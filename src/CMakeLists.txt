@@ -1,14 +1,6 @@
 # See URLs below for more documentation on ExternalProject
 # http://www.cmake.org/cmake/help/v3.0/module/ExternalProject.html
 # http://www.kitware.com/media/html/BuildingExternalProjectsWithCMake2.8.html
-
-ExternalProject_Add(boost
-    SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/boost"
-    INSTALL_DIR "${ANDROID_INSTALL_DIR}"
-    CMAKE_GENERATOR "${ANDROID_GENERATOR}"
-    CMAKE_ARGS
-    ${COMMON_CMAKE_ARGS}
-    BUILD_IN_SOURCE 0)
     
 ExternalProject_Add(jsoncpp
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/jsoncpp"
@@ -34,6 +26,7 @@ ExternalProject_Add(libfunctionality
 ExternalProject_Add(OSVR-Core
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core"
     INSTALL_DIR "${ANDROID_INSTALL_DIR}"
+    DEPENDS "jsoncpp"
     CMAKE_GENERATOR "${ANDROID_GENERATOR}"
     CMAKE_ARGS
     ${COMMON_CMAKE_ARGS}
