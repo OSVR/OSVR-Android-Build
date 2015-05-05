@@ -32,6 +32,8 @@ ExternalProject_Add(OSVR-Core
     ${COMMON_CMAKE_ARGS}
     -DOpenCV_DIR=/Users/appleuser/Documents/OsvrAndroid/OpenCV-2.4.10-android-sdk/sdk/native/jni
     -DPYTHON_EXECUTABLE=/usr/bin/python
+        -DLIBUSB1_INCLUDE_DIR=/Users/appleuser/Documents/OsvrAndroid/libusb-master/libusb/
+        -DLIBUSB1_LIBRARY=/Users/appleuser/Documents/OsvrAndroid/libusb-master/android/obj/local/armeabi/libusb1.0.so
     -DJAVA_JVM_LIBRARY=/Library/Java/JavaVirtualMachines/jdk1.8.0_40.jdk/Contents/Home/jre/lib/server/libjvm.dylib
     -DJAVA_AWT_LIBRARY=/Library/Java/JavaVirtualMachines/jdk1.8.0_40.jdk/Contents/Home/jre/lib/libawt.dylib
     -DJAVA_INCLUDE_PATH=/Library/Java/JavaVirtualMachines/jdk1.8.0_40.jdk/Contents/Home/include/
