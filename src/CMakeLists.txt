@@ -36,7 +36,7 @@ ExternalProject_Add(OSVR-Core
     -DBoost_INCLUDE_DIR=/Users/appleuser/Documents/OsvrAndroid/boost/Boost-for-Android-master/boost_1_53_0/
     -DBOOST_ROOT=/Users/appleuser/Documents/OsvrAndroid/boost/Boost-for-Android-master/boost_1_53_0/
     -DBOOST_LIBRARYDIR=/Users/appleuser/Documents/OsvrAndroid/boost/Boost-for-Android-master/build/lib/
-    -DCMAKE_PREFIX_PATH="/Users/appleuser/Documents/OsvrAndroid/boost/Boost-for-Android-master/boost_1_53_0/;/Users/appleuser/Documents/OsvrAndroid/vrpn/submodules/jsoncpp/build;/Users/appleuser/Documents/OsvrAndroid/OSVR-Core/vendor/vrpn/build/"
+    -DCMAKE_PREFIX_PATH="/Users/appleuser/Documents/OsvrAndroid/boost/Boost-for-Android-master/boost_1_53_0/;/Users/appleuser/Documents/OsvrAndroid/vrpn/submodules/jsoncpp/build/;/Users/appleuser/Documents/OsvrAndroid/OSVR-Core/vendor/vrpn/build/"
     -DLIBUSB1_INCLUDE_DIR=/Users/appleuser/Documents/OsvrAndroid/libusb-master/libusb/
     -DLIBUSB1_LIBRARY=/Users/appleuser/Documents/OsvrAndroid/libusb-master/android/obj/local/armeabi/libusb1.0.so
     -DHIDAPI_INCLUDE_DIR=/Users/appleuser/Documents/OsvrAndroid/hidapi/hidapi/
@@ -50,4 +50,5 @@ ExternalProject_Add(OSVR-Core
     -DJAVA_INCLUDE_PATH=/Library/Java/JavaVirtualMachines/jdk1.8.0_40.jdk/Contents/Home/include/
     -DJAVA_INCLUDE_PATH2=/Library/Java/JavaVirtualMachines/jdk1.8.0_40.jdk/Contents/Home/include/
     -DJAVA_AWT_INCLUDE_PATH=/Library/Java/JavaVirtualMachines/jdk1.8.0_40.jdk/Contents/Home/include/
+    -DCMAKE_MODULE_PATH=/Users/appleuser/Documents/OSVR-Android-Build/src/OSVR-Core/vendor/vrpn/cmake/Findjsoncpp.cmake
     BUILD_IN_SOURCE 0)
