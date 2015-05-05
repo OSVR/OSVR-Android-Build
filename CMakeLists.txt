@@ -11,6 +11,16 @@ if(NOT ANDROID_ABI)
     set_property(CACHE ANDROID_ABI PROPERTY STRINGS "armeabi" "armeabi-v7a" "armeabi-v7a with NEON" "armeabi-v7a with VFPV3" "armeabi-v6 with VFP" "x86" "mips" "arm64-v8a" "x86_64" "mips64")
 endif()
 
+if(NOT ANDROID_STL)
+    set(ANDROID_STL "gnustl_shared" CACHE STRING "Android STL")
+    set_property(CACHE ANDROID_ABI PROPERTY STRINGS "gnustl_shared")
+endif()
+
+if(NOT ANDROID_TOOLCHAIN_NAME)
+    set(ANDROID_TOOLCHAIN_NAME "arm-linux-androideabi-4.9" CACHE STRING "Android Toolchain name")
+    set_property(CACHE ANDROID_TOOLCHAIN_NAME PROPERTY STRINGS "arm-linux-androideabi-4.9")
+endif()
+
 if(NOT ANDROID_GENERATOR)
     if(WIN32)
         set(ANDROID_GENERATOR "MinGW Makefiles" CACHE STRING "The CMake generator to use when building projects.")
@@ -85,6 +95,8 @@ set(COMMON_CMAKE_ARGS
     "-DCMAKE_INSTALL_PREFIX=${ANDROID_INSTALL_DIR}"
     "-DCMAKE_PREFIX_PATH=${ANDROID_INSTALL_DIR}"
     "-DCMAKE_TOOLCHAIN_FILE:FILEPATH=${ANDROID_TOOLCHAIN}"
+    "-DCMAKE_TOOLCHAIN_NAME:STRING=${ANDROID_TOOLCHAIN_NAME}"
+    "-DANDROID_STL:STRING=${ANDROID_STL}"
     "-DANDROID_ABI:STRING=${ANDROID_ABI}"
     "-DCMAKE_BUILD_TYPE=${ANDROID_BUILD_TYPE}")
 
