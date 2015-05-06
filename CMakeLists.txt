@@ -16,15 +16,15 @@ if(NOT ANDROID_STL)
     set_property(CACHE ANDROID_ABI PROPERTY STRINGS "gnustl_static" "gnustl_shared")
 endif()
 
-if(NOT ANDROID_TOOLCHAIN_NAME)
-    set(ANDROID_TOOLCHAIN_NAME "arm-linux-androideabi-4.9" CACHE STRING "Android Toolchain name")
-    set_property(CACHE ANDROID_TOOLCHAIN_NAME PROPERTY STRINGS "arm-linux-androideabi-4.9")
-endif()
-
-if(NOT ANDROID_NATIVE_API_LEVEL)
-    set(ANDROID_NATIVE_API_LEVEL "19" CACHE STRING "Android Native API Level")
-    set_property(CACHE ANDROID_NATIVE_API_LEVEL PROPERTY STRINGS "19")
-endif()
+# if(NOT ANDROID_TOOLCHAIN_NAME)
+#     set(ANDROID_TOOLCHAIN_NAME "arm-linux-androideabi-4.9" CACHE STRING "Android Toolchain name")
+#     set_property(CACHE ANDROID_TOOLCHAIN_NAME PROPERTY STRINGS "arm-linux-androideabi-4.9")
+# endif()
+#
+# if(NOT ANDROID_NATIVE_API_LEVEL)
+#     set(ANDROID_NATIVE_API_LEVEL "19" CACHE STRING "Android Native API Level")
+#     set_property(CACHE ANDROID_NATIVE_API_LEVEL PROPERTY STRINGS "19")
+# endif()
 
 if(NOT ANDROID_GENERATOR)
     if(WIN32)
@@ -104,7 +104,8 @@ set(COMMON_CMAKE_ARGS
     "-DANDROID_STL:STRING=${ANDROID_STL}"
     "-DANDROID_ABI:STRING=${ANDROID_ABI}"
     "-DCMAKE_BUILD_TYPE=${ANDROID_BUILD_TYPE}"
-    "-DANDROID_NATIVE_API_LEVEL:STRING=${ANDROID_NATIVE_API_LEVEL}")
+    # "-DANDROID_NATIVE_API_LEVEL:STRING=${ANDROID_NATIVE_API_LEVEL}"
+    )
 
 ###
 # Find make
