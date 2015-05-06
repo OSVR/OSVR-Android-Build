@@ -85,8 +85,8 @@ endif()
 ###
 # Setting some variables and properties
 ###
-if(EXISTS "${ANDROID_NDK}/build/tools/build-crystax.sh")
-    # We have the CrystaX NDK. Eventually should be handled by a script in android-cmake.
+if(EXISTS "${ANDROID_NDK}/sources/crystax")
+    # We have the CrystaX NDK. This is just a simple way to check
     set(ANDROID_CRYSTAX_NDK ON)
 endif()
 
