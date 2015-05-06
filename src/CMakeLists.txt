@@ -117,8 +117,8 @@ ExternalProject_Add(OSVR-Core
     ${COMMON_CMAKE_ARGS}
     "-DOSVR_JSON_TO_C_COMMAND=${OSVR_JSON_TO_C_COMMAND}"
     "-DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}" # Have to pass in "host" python TODO is this actually needed?
-    -DLIBUSB1_INCLUDE_DIR=/Users/appleuser/Documents/OsvrAndroid/libusb-master/libusb/
-    -DLIBUSB1_LIBRARY=/Users/appleuser/Documents/OsvrAndroid/libusb-master/android/obj/local/armeabi/libusb1.0.so
+    "-DLIBUSB1_INCLUDE_DIR=${LIBUSB1_INCLUDE_DIR}"
+    "-DLIBUSB1_LIBRARY=${LIBUSB1_LIBRARY}"
     -DHIDAPI_INCLUDE_DIR=/Users/appleuser/Documents/OsvrAndroid/hidapi/hidapi/
     -DHIDAPI_LIBRARY=/Users/appleuser/Downloads/bins/libhidapi.so
     BUILD_IN_SOURCE 0)
