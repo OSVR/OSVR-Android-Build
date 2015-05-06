@@ -112,6 +112,7 @@ ExternalProject_Add(OSVR-Core
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core"
     INSTALL_DIR "${ANDROID_INSTALL_DIR}"
     DEPENDS jsoncpp libfunctionality OpenCV osvr_json_to_c_host
+    libusb # TODO probably remove this after getting hidapi going, since I think it's only a internal dependency for HIDAPI, at least right now.
     CMAKE_GENERATOR "${ANDROID_GENERATOR}"
     CMAKE_ARGS
     ${COMMON_CMAKE_ARGS}
