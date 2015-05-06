@@ -37,7 +37,10 @@ set(OSVR_JSON_TO_C_COMMAND "${HOST_INSTALL_DIR}/bin/osvr_json_to_c")
 # OpenCV has a binary SDK for Android - just download and unpack.
 set(OPENCV_VERSION 2.4.11)
 ExternalProject_Add(OpenCV
-    URL http://downloads.sourceforge.net/project/opencvlibrary/opencv-android/${OPENCV_VERSION}/OpenCV-${OPENCV_VERSION}-android-sdk.zip)
+    URL http://downloads.sourceforge.net/project/opencvlibrary/opencv-android/${OPENCV_VERSION}/OpenCV-${OPENCV_VERSION}-android-sdk.zip
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ""
+    INSTALL_COMMAND "")
 
 # Find out where OpenCV was extracted so we can extend the prefix path.
 ExternalProject_Get_Property(OpenCV SOURCE_DIR)
