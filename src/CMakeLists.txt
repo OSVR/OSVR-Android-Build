@@ -94,8 +94,15 @@ ExternalProject_Add(libfunctionality
     CMAKE_ARGS ${COMMON_CMAKE_ARGS} # put any others here
     BUILD_IN_SOURCE 0)
 
+# TODO build in <BUILD_DIR>, install in <INSTALL_DIR>
+ExternalProject_Add(libusb
+    SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libusb/android/jni"
+    CONFIGURE_COMMAND ${ANDROID_NDK_BUILD_WITH_ARGS} clean -C <SOURCE_DIR>
+    BUILD_COMMAND ${ANDROID_NDK_BUILD_WITH_ARGS} -C <SOURCE_DIR>
+    INSTALL_COMMAND "")
 
-# TODO libusb
+set(LIBUSB1_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libusb/libusb")
+set(LIBUSB1_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/android/jni/${ANDROID_ABI}/libusb1.0.so")
 # TODO build hidapi - depends on libusb
 
 
