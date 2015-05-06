@@ -28,6 +28,27 @@ ExternalProject_Add(OpenCV
     URL http://downloads.sourceforge.net/project/opencvlibrary/opencv-android/${OPENCV_VERSION}/OpenCV-${OPENCV_VERSION}-android-sdk.zip
 
 )
+
+if(NOT ANDROID_CRYSTAX_NDK)
+    # In this case, we need boost.
+    if(WIN32)
+        # and msys bash
+        find_program(SH_COMMAND NAMES bash.exe dash.exe sh.exe)
+        if(NOT SH_COMMAND)
+            message(FATAL_ERROR "Missing msys sh - needed to build Boost. Either set SH_COMMAND or use the CrystaX NDK (which includes boost)")
+        endif()
+        set(SH_COMMAND_ARGS --login -i)
+    else()
+        set(SH_COMMAND sh)
+        set(SH_COMMAND_ARGS)
+    endif()
+    ExternalProject_Add(Boost
+        SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/boost"
+        CONFIGURE_COMMAND ""
+        BUILD_COMMAND "${SH_COMMAND}" ${SH_COMMAND_ARGS} -c "./build-android.sh ${ANDROID_NDK}"
+        BUILD_IN_SOURCE 1)
+endif()
+
 ExternalProject_Add(OSVR-Core
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core"
     INSTALL_DIR "${ANDROID_INSTALL_DIR}"
