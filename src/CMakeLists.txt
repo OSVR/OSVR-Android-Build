@@ -2,26 +2,33 @@
 # http://www.cmake.org/cmake/help/v3.0/module/ExternalProject.html
 # http://www.kitware.com/media/html/BuildingExternalProjectsWithCMake2.8.html
 
-ExternalProject_Add(jsoncpp
+
+###
+# Host (native, not Android) projects from source
+###
+set(HOST_PREFIX_PATH ${CMAKE_PREFIX_PATH})
+
+ExternalProject_Add(jsoncpp_host
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/jsoncpp"
-    INSTALL_DIR "${ANDROID_INSTALL_DIR}"
-    CMAKE_GENERATOR "${ANDROID_GENERATOR}"
     CMAKE_ARGS
-    ${COMMON_CMAKE_ARGS}
+    "-DCMAKE_INSTALL_PREFIX=${HOST_INSTALL_DIR}"
     -DJSONCPP_WITH_CMAKE_PACKAGE=ON
-    -DJSONCPP_LIB_BUILD_SHARED=ON
-    -DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE} # Have to pass in "host" python
+    -DJSONCPP_LIB_BUILD_SHARED=OFF
     -DJSONCPP_WITH_TESTS=OFF
     -DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF
-    # put any others here
     BUILD_IN_SOURCE 0)
 
-ExternalProject_Add(libfunctionality
-    SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libfunctionality"
-    INSTALL_DIR "${ANDROID_INSTALL_DIR}"
-    CMAKE_GENERATOR "${ANDROID_GENERATOR}"
-    CMAKE_ARGS ${COMMON_CMAKE_ARGS} # put any others here
-    BUILD_IN_SOURCE 0)
+list(APPEND HOST_PREFIX_PATH "${HOST_INSTALL_DIR}")
+
+ExternalProject_Add(osvr_json_to_c_host
+    DEPENDS jsoncpp_host
+    SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/osvr_json_to_c"
+    CMAKE_ARGS
+    "-DCMAKE_INSTALL_PREFIX=${HOST_INSTALL_DIR}"
+    "-DCMAKE_PREFIX_PATH=${HOST_PREFIX_PATH}"
+    "-DOSVR_CORE_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core")
+
+set(OSVR_JSON_TO_C_COMMAND "${HOST_INSTALL_DIR}/bin/osvr_json_to_c")
 
 ###
 # Android Binary SDKs
@@ -62,6 +69,32 @@ if(NOT ANDROID_CRYSTAX_NDK)
     #osvr_android_add_to_common_prefix_path("${SOURCE_DIR}")
 endif()
 
+###
+# Android builds from source
+###
+
+ExternalProject_Add(jsoncpp
+    SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/jsoncpp"
+    INSTALL_DIR "${ANDROID_INSTALL_DIR}"
+    CMAKE_GENERATOR "${ANDROID_GENERATOR}"
+    CMAKE_ARGS
+    ${COMMON_CMAKE_ARGS}
+    -DJSONCPP_WITH_CMAKE_PACKAGE=ON
+    -DJSONCPP_LIB_BUILD_SHARED=ON
+    "-DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}" # Have to pass in "host" python
+    -DJSONCPP_WITH_TESTS=OFF
+    -DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF
+    # put any others here
+    BUILD_IN_SOURCE 0)
+
+ExternalProject_Add(libfunctionality
+    SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libfunctionality"
+    INSTALL_DIR "${ANDROID_INSTALL_DIR}"
+    CMAKE_GENERATOR "${ANDROID_GENERATOR}"
+    CMAKE_ARGS ${COMMON_CMAKE_ARGS} # put any others here
+    BUILD_IN_SOURCE 0)
+
+
 # TODO libusb
 # TODO build hidapi - depends on libusb
 
@@ -71,11 +104,12 @@ endif()
 ExternalProject_Add(OSVR-Core
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core"
     INSTALL_DIR "${ANDROID_INSTALL_DIR}"
-    DEPENDS jsoncpp libfunctionality OpenCV
+    DEPENDS jsoncpp libfunctionality OpenCV osvr_json_to_c_host
     CMAKE_GENERATOR "${ANDROID_GENERATOR}"
     CMAKE_ARGS
     ${COMMON_CMAKE_ARGS}
-    -DPYTHON_EXECUTABLE=/usr/bin/python
+    "-DOSVR_JSON_TO_C_COMMAND=${OSVR_JSON_TO_C_COMMAND}"
+    "-DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}" # Have to pass in "host" python TODO is this actually needed?
     -DLIBUSB1_INCLUDE_DIR=/Users/appleuser/Documents/OsvrAndroid/libusb-master/libusb/
     -DLIBUSB1_LIBRARY=/Users/appleuser/Documents/OsvrAndroid/libusb-master/android/obj/local/armeabi/libusb1.0.so
     -DHIDAPI_INCLUDE_DIR=/Users/appleuser/Documents/OsvrAndroid/hidapi/hidapi/

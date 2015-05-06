@@ -36,9 +36,6 @@ if(NOT ANDROID_GENERATOR)
     endif()
 endif()
 
-
-
-
 ###
 # NDK finding - using environment and CMake variables as a hint
 ###
@@ -93,6 +90,9 @@ file(TO_NATIVE_PATH "${ANDROID_TOOLCHAIN}" ANDROID_TOOLCHAIN_NATIVE_PATH)
 
 set(ANDROID_INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/install")
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${ANDROID_INSTALL_DIR}")
+
+set(HOST_INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/host-install")
+set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${HOST_INSTALL_DIR}")
 
 get_filename_component(ANDROID_NDK ${ANDROID_NDK_BUILD} DIRECTORY CACHE)
 
