@@ -12,8 +12,8 @@ if(NOT ANDROID_ABI)
 endif()
 
 if(NOT ANDROID_STL)
-    set(ANDROID_STL "gnustl_shared" CACHE STRING "Android STL")
-    set_property(CACHE ANDROID_ABI PROPERTY STRINGS "gnustl_shared")
+    set(ANDROID_STL "gnustl_shared" CACHE STRING "Android STL/C++ runtime")
+    set_property(CACHE ANDROID_ABI PROPERTY STRINGS "gnustl_static" "gnustl_shared")
 endif()
 
 if(NOT ANDROID_TOOLCHAIN_NAME)
