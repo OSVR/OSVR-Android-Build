@@ -23,6 +23,11 @@ ExternalProject_Add(libfunctionality
     CMAKE_ARGS ${COMMON_CMAKE_ARGS} # put any others here
     BUILD_IN_SOURCE 0)
 
+set(OPENCV_VERSION 2.4.11)
+ExternalProject_Add(OpenCV
+    URL http://downloads.sourceforge.net/project/opencvlibrary/opencv-android/${OPENCV_VERSION}/OpenCV-${OPENCV_VERSION}-android-sdk.zip
+
+)
 ExternalProject_Add(OSVR-Core
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core"
     INSTALL_DIR "${ANDROID_INSTALL_DIR}"
