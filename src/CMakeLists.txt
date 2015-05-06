@@ -31,7 +31,7 @@ ExternalProject_Add(OpenCV
 ExternalProject_Add(OSVR-Core
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core"
     INSTALL_DIR "${ANDROID_INSTALL_DIR}"
-    DEPENDS "jsoncpp"
+    DEPENDS jsoncpp libfunctionality OpenCV
     CMAKE_GENERATOR "${ANDROID_GENERATOR}"
     CMAKE_ARGS
     ${COMMON_CMAKE_ARGS}
