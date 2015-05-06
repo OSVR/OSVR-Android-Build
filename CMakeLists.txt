@@ -85,6 +85,11 @@ endif()
 ###
 # Setting some variables and properties
 ###
+if(EXISTS "${ANDROID_NDK}/build/tools/build-crystax.sh")
+    # We have the CrystaX NDK. Eventually should be handled by a script in android-cmake.
+    set(ANDROID_CRYSTAX_NDK ON)
+endif()
+
 set(ANDROID_TOOLCHAIN "${CMAKE_CURRENT_SOURCE_DIR}/android-cmake/android.toolchain.cmake")
 file(TO_NATIVE_PATH "${ANDROID_TOOLCHAIN}" ANDROID_TOOLCHAIN_NATIVE_PATH)
 
@@ -142,6 +147,15 @@ endif()
 # Find other host programs
 ###
 find_package(PythonInterp REQUIRED)
+
+###
+# Messages regarding config
+###
+if(ANDROID_CRYSTAX_NDK)
+    message(STATUS "Using a CrystaX NDK")
+else()
+    message(STATUS "Using a standard (Google) Android NDK")
+endif()
 
 # Go into the subdirectory with the projects in it
 add_subdirectory(src)
