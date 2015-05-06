@@ -36,6 +36,9 @@ ExternalProject_Add(OpenCV
 ExternalProject_Get_Property(OpenCV SOURCE_DIR)
 osvr_android_add_to_common_prefix_path("${SOURCE_DIR}/sdk/native/jni")
 
+###
+# Conditionally build Boost
+###
 if(NOT ANDROID_CRYSTAX_NDK)
     # In this case, we need boost.
     if(WIN32)
@@ -54,8 +57,17 @@ if(NOT ANDROID_CRYSTAX_NDK)
         CONFIGURE_COMMAND ""
         BUILD_COMMAND "${SH_COMMAND}" ${SH_COMMAND_ARGS} -c "./build-android.sh ${ANDROID_NDK}"
         BUILD_IN_SOURCE 1)
+    # TODO call osvr_android_add_to_common_prefix_path - might be something like this
+    #ExternalProject_Get_Property(Boost SOURCE_DIR)
+    #osvr_android_add_to_common_prefix_path("${SOURCE_DIR}")
 endif()
 
+# TODO libusb
+# TODO build hidapi - depends on libusb
+
+
+# TODO add required projects to DEPENDS
+# TODO remove hard-coded paths
 ExternalProject_Add(OSVR-Core
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core"
     INSTALL_DIR "${ANDROID_INSTALL_DIR}"
