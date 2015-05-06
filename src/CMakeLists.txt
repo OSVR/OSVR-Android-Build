@@ -23,11 +23,18 @@ ExternalProject_Add(libfunctionality
     CMAKE_ARGS ${COMMON_CMAKE_ARGS} # put any others here
     BUILD_IN_SOURCE 0)
 
+###
+# Android Binary SDKs
+###
+
+# OpenCV has a binary SDK for Android - just download and unpack.
 set(OPENCV_VERSION 2.4.11)
 ExternalProject_Add(OpenCV
-    URL http://downloads.sourceforge.net/project/opencvlibrary/opencv-android/${OPENCV_VERSION}/OpenCV-${OPENCV_VERSION}-android-sdk.zip
+    URL http://downloads.sourceforge.net/project/opencvlibrary/opencv-android/${OPENCV_VERSION}/OpenCV-${OPENCV_VERSION}-android-sdk.zip)
 
-)
+# Find out where OpenCV was extracted so we can extend the prefix path.
+ExternalProject_Get_Property(OpenCV SOURCE_DIR)
+osvr_android_add_to_common_prefix_path("${SOURCE_DIR}/sdk/native/jni")
 
 if(NOT ANDROID_CRYSTAX_NDK)
     # In this case, we need boost.
@@ -56,7 +63,6 @@ ExternalProject_Add(OSVR-Core
     CMAKE_GENERATOR "${ANDROID_GENERATOR}"
     CMAKE_ARGS
     ${COMMON_CMAKE_ARGS}
-    -DOpenCV_DIR=/Users/appleuser/Documents/OsvrAndroid/OpenCV-2.4.10-android-sdk/sdk/native/jni
     -DPYTHON_EXECUTABLE=/usr/bin/python
     -DLIBUSB1_INCLUDE_DIR=/Users/appleuser/Documents/OsvrAndroid/libusb-master/libusb/
     -DLIBUSB1_LIBRARY=/Users/appleuser/Documents/OsvrAndroid/libusb-master/android/obj/local/armeabi/libusb1.0.so
