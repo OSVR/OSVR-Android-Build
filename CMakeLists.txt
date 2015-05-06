@@ -103,12 +103,10 @@ get_filename_component(ANDROID_NDK ${ANDROID_NDK_BUILD} DIRECTORY CACHE)
 
 
 set(ANDROID_CMAKE_PREFIX_PATH)
-
-# Creates/updates the COMMON_CMAKE_ARGS, after adding the given path to the
-# ANDROID_CMAKE_PREFIX_PATH (the list that gets passed to Android CMake builds)
-macro(osvr_android_add_to_common_prefix_path _newpath)
-    list(APPEND ANDROID_CMAKE_PREFIX_PATH ${_newpath})
-    set(COMMON_CMAKE_ARGS_EXCEPT_PREFIX_PATH
+set(ANDROID_COMMON_CMAKE_ARGS)
+# Internal utility macro for generating COMMON_CMAKE_ARGS
+macro(_osvr_android_update_common_cmake_args)
+    set(COMMON_CMAKE_ARGS
         "-DCMAKE_INSTALL_PREFIX=${ANDROID_INSTALL_DIR}"
         "-DCMAKE_PREFIX_PATH=${ANDROID_CMAKE_PREFIX_PATH}"
         "-DCMAKE_TOOLCHAIN_FILE:FILEPATH=${ANDROID_TOOLCHAIN}"
@@ -118,7 +116,21 @@ macro(osvr_android_add_to_common_prefix_path _newpath)
         "-DANDROID_ABI:STRING=${ANDROID_ABI}"
         "-DCMAKE_BUILD_TYPE=${ANDROID_BUILD_TYPE}"
         # "-DANDROID_NATIVE_API_LEVEL:STRING=${ANDROID_NATIVE_API_LEVEL}"
+        ${ANDROID_COMMON_CMAKE_ARGS}
         )
+endmacro()
+
+# Creates/updates the COMMON_CMAKE_ARGS, after adding the given argument
+macro(osvr_android_add_common_cmake_arg _arg)
+    list(APPEND ANDROID_COMMON_CMAKE_ARGS ${_arg})
+    _osvr_android_update_common_cmake_args()
+endmacro()
+
+# Creates/updates the COMMON_CMAKE_ARGS, after adding the given path to the
+# ANDROID_CMAKE_PREFIX_PATH (the list that gets passed to Android CMake builds)
+macro(osvr_android_add_to_common_prefix_path _newpath)
+    list(APPEND ANDROID_CMAKE_PREFIX_PATH ${_newpath})
+    _osvr_android_update_common_cmake_args()
 endmacro()
 
 # Initial run to generate COMMON_CMAKE_ARGS, only have one entry for the prefix path
@@ -138,7 +150,7 @@ if(WIN32)
         if(NOT ANDROID_NDK_MAKE)
             message(FATAL_ERROR "Need the location of a make executable - usually bundled with the NDK!")
         endif()
-        list(APPEND COMMON_CMAKE_ARGS "-DCMAKE_MAKE_PROGRAM=${ANDROID_NDK_MAKE}")
+        osvr_android_add_common_cmake_arg("-DCMAKE_MAKE_PROGRAM=${ANDROID_NDK_MAKE}")
     endif()
     # todo find ninja
 endif()
