@@ -11,6 +11,21 @@ if(NOT ANDROID_ABI)
     set_property(CACHE ANDROID_ABI PROPERTY STRINGS "armeabi" "armeabi-v7a" "armeabi-v7a with NEON" "armeabi-v7a with VFPV3" "armeabi-v6 with VFP" "x86" "mips" "arm64-v8a" "x86_64" "mips64")
 endif()
 
+if(NOT ANDROID_STL)
+    set(ANDROID_STL "gnustl_shared" CACHE STRING "Android STL/C++ runtime")
+    set_property(CACHE ANDROID_ABI PROPERTY STRINGS "gnustl_static" "gnustl_shared")
+endif()
+
+# if(NOT ANDROID_TOOLCHAIN_NAME)
+#     set(ANDROID_TOOLCHAIN_NAME "arm-linux-androideabi-4.9" CACHE STRING "Android Toolchain name")
+#     set_property(CACHE ANDROID_TOOLCHAIN_NAME PROPERTY STRINGS "arm-linux-androideabi-4.9")
+# endif()
+#
+# if(NOT ANDROID_NATIVE_API_LEVEL)
+#     set(ANDROID_NATIVE_API_LEVEL "19" CACHE STRING "Android Native API Level")
+#     set_property(CACHE ANDROID_NATIVE_API_LEVEL PROPERTY STRINGS "19")
+# endif()
+
 if(NOT ANDROID_GENERATOR)
     if(WIN32)
         set(ANDROID_GENERATOR "MinGW Makefiles" CACHE STRING "The CMake generator to use when building projects.")
@@ -20,9 +35,6 @@ if(NOT ANDROID_GENERATOR)
         set_property(CACHE ANDROID_GENERATOR PROPERTY STRINGS "Unix Makefiles" "Ninja")
     endif()
 endif()
-
-
-
 
 ###
 # NDK finding - using environment and CMake variables as a hint
@@ -79,14 +91,33 @@ file(TO_NATIVE_PATH "${ANDROID_TOOLCHAIN}" ANDROID_TOOLCHAIN_NATIVE_PATH)
 set(ANDROID_INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/install")
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${ANDROID_INSTALL_DIR}")
 
+set(HOST_INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/host-install")
+set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${HOST_INSTALL_DIR}")
+
 get_filename_component(ANDROID_NDK ${ANDROID_NDK_BUILD} DIRECTORY CACHE)
 
-set(COMMON_CMAKE_ARGS
-    "-DCMAKE_INSTALL_PREFIX=${ANDROID_INSTALL_DIR}"
-    "-DCMAKE_PREFIX_PATH=${ANDROID_INSTALL_DIR}"
-    "-DCMAKE_TOOLCHAIN_FILE:FILEPATH=${ANDROID_TOOLCHAIN}"
-    "-DANDROID_ABI:STRING=${ANDROID_ABI}"
-    "-DCMAKE_BUILD_TYPE=${ANDROID_BUILD_TYPE}")
+
+set(ANDROID_CMAKE_PREFIX_PATH)
+
+# Creates/updates the COMMON_CMAKE_ARGS, after adding the given path to the
+# ANDROID_CMAKE_PREFIX_PATH (the list that gets passed to Android CMake builds)
+macro(osvr_android_add_to_common_prefix_path _newpath)
+    list(APPEND ANDROID_CMAKE_PREFIX_PATH ${_newpath})
+    set(COMMON_CMAKE_ARGS_EXCEPT_PREFIX_PATH
+        "-DCMAKE_INSTALL_PREFIX=${ANDROID_INSTALL_DIR}"
+        "-DCMAKE_PREFIX_PATH=${ANDROID_CMAKE_PREFIX_PATH}"
+        "-DCMAKE_TOOLCHAIN_FILE:FILEPATH=${ANDROID_TOOLCHAIN}"
+        #"-DANDROID_TOOLCHAIN_NAME:STRING=${ANDROID_TOOLCHAIN_NAME}"
+        "-DANDROID_NDK:PATH=${ANDROID_NDK}"
+        "-DANDROID_STL:STRING=${ANDROID_STL}"
+        "-DANDROID_ABI:STRING=${ANDROID_ABI}"
+        "-DCMAKE_BUILD_TYPE=${ANDROID_BUILD_TYPE}"
+        # "-DANDROID_NATIVE_API_LEVEL:STRING=${ANDROID_NATIVE_API_LEVEL}"
+        )
+endmacro()
+
+# Initial run to generate COMMON_CMAKE_ARGS, only have one entry for the prefix path
+osvr_android_add_to_common_prefix_path("${ANDROID_INSTALL_DIR}")
 
 ###
 # Find make
