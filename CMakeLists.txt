@@ -169,6 +169,8 @@ find_package(PythonInterp REQUIRED)
 ###
 if(ANDROID_CRYSTAX_NDK)
     message(STATUS "Using a CrystaX NDK")
+    # Use shared libcrystax consistently for all modules.
+    osvr_android_add_common_cmake_arg("-DANDROID_CRYSTAX_NDK_SHARED_LIBCRYSTAX=ON")
 else()
     message(STATUS "Using a standard (Google) Android NDK")
 endif()
