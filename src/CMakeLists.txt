@@ -106,9 +106,6 @@ ExternalProject_Add(libusb
     COMMAND "${CMAKE_COMMAND}" -E copy_if_different "<SOURCE_DIR>/libusb/libusb.h" "<INSTALL_DIR>/include/libusb.h"
     BUILD_IN_SOURCE 0)
 
-
-# TODO add required projects to DEPENDS
-# TODO remove hard-coded paths
 ExternalProject_Add(OSVR-Core
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core"
     INSTALL_DIR "${ANDROID_INSTALL_DIR}"
