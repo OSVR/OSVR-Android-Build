@@ -44,7 +44,7 @@ ExternalProject_Add(OpenCV
 
 # Find out where OpenCV was extracted so we can extend the prefix path.
 ExternalProject_Get_Property(OpenCV SOURCE_DIR)
-osvr_android_add_to_common_prefix_path("${SOURCE_DIR}/sdk/native/jni")
+set(OpenCV_DIR "${SOURCE_DIR}/sdk/native/jni")
 
 ###
 # Conditionally build Boost
@@ -118,4 +118,5 @@ ExternalProject_Add(OSVR-Core
     ${COMMON_CMAKE_ARGS}
     "-DOSVR_JSON_TO_C_COMMAND=${OSVR_JSON_TO_C_COMMAND}"
     "-DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}" # Have to pass in "host" python TODO is this actually needed?
+    "-DOpenCV_DIR=${OpenCV_DIR}"
     BUILD_IN_SOURCE 0)
