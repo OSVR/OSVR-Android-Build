@@ -119,4 +119,5 @@ ExternalProject_Add(OSVR-Core
     "-DOSVR_JSON_TO_C_COMMAND=${OSVR_JSON_TO_C_COMMAND}"
     "-DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}" # Have to pass in "host" python TODO is this actually needed?
     "-DOpenCV_DIR=${OpenCV_DIR}"
+    "-DVRPN_HIDAPI_SOURCE_ROOT=${CMAKE_CURRENT_SOURCE_DIR}/hidapi" # Let VRPN build HIDAPI for us.
     BUILD_IN_SOURCE 0)
