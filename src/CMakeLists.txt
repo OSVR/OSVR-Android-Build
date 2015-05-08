@@ -38,6 +38,7 @@ set(OSVR_JSON_TO_C_COMMAND "${HOST_INSTALL_DIR}/bin/osvr_json_to_c")
 set(OPENCV_VERSION 2.4.11)
 ExternalProject_Add(OpenCV
     URL http://downloads.sourceforge.net/project/opencvlibrary/opencv-android/${OPENCV_VERSION}/OpenCV-${OPENCV_VERSION}-android-sdk.zip
+    URL_HASH SHA1=ACFB4789B78752AE5C52CC5C151E2AE3DD006CEF
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND "")
