@@ -97,16 +97,14 @@ ExternalProject_Add(libfunctionality
     CMAKE_ARGS ${COMMON_CMAKE_ARGS} # put any others here
     BUILD_IN_SOURCE 0)
 
-# TODO build in <BUILD_DIR>, install in <INSTALL_DIR>
 ExternalProject_Add(libusb
-    SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libusb/android/jni"
-    CONFIGURE_COMMAND ${ANDROID_NDK_BUILD_WITH_ARGS} clean -C <SOURCE_DIR>
-    BUILD_COMMAND ${ANDROID_NDK_BUILD_WITH_ARGS} -C <SOURCE_DIR>
-    INSTALL_COMMAND "")
-
-set(LIBUSB1_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libusb/libusb")
-set(LIBUSB1_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/android/jni/${ANDROID_ABI}/libusb1.0.so")
-# TODO build hidapi - depends on libusb
+    SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libusb"
+    INSTALL_DIR "${ANDROID_INSTALL_DIR}"
+    CONFIGURE_COMMAND ${ANDROID_NDK_BUILD_WITH_ARGS} clean -C "<SOURCE_DIR>/android/jni"
+    BUILD_COMMAND ${ANDROID_NDK_BUILD_WITH_ARGS} -C "<SOURCE_DIR>/android/jni"
+    INSTALL_COMMAND "${CMAKE_COMMAND}" -E make_directory "<INSTALL_DIR>/include"
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different "<SOURCE_DIR>/libusb/libusb.h" "<INSTALL_DIR>/include/libusb.h"
+    BUILD_IN_SOURCE 0)
 
 
 # TODO add required projects to DEPENDS
@@ -114,15 +112,10 @@ set(LIBUSB1_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/android/jni/${ANDROID_ABI}/libu
 ExternalProject_Add(OSVR-Core
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core"
     INSTALL_DIR "${ANDROID_INSTALL_DIR}"
-    DEPENDS jsoncpp libfunctionality OpenCV osvr_json_to_c_host
-    libusb # TODO probably remove this after getting hidapi going, since I think it's only a internal dependency for HIDAPI, at least right now.
+    DEPENDS jsoncpp libfunctionality OpenCV osvr_json_to_c_host libusb
     CMAKE_GENERATOR "${ANDROID_GENERATOR}"
     CMAKE_ARGS
     ${COMMON_CMAKE_ARGS}
     "-DOSVR_JSON_TO_C_COMMAND=${OSVR_JSON_TO_C_COMMAND}"
     "-DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}" # Have to pass in "host" python TODO is this actually needed?
-    "-DLIBUSB1_INCLUDE_DIR=${LIBUSB1_INCLUDE_DIR}"
-    "-DLIBUSB1_LIBRARY=${LIBUSB1_LIBRARY}"
-    -DHIDAPI_INCLUDE_DIR=/Users/appleuser/Documents/OsvrAndroid/hidapi/hidapi/
-    -DHIDAPI_LIBRARY=/Users/appleuser/Downloads/bins/libhidapi.so
     BUILD_IN_SOURCE 0)
