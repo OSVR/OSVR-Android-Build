@@ -46,13 +46,22 @@ if(ANDROID_NDK)
     set(ANDROID_NDK_HINT ${ANDROID_NDK})
 endif()
 
+if(WIN32)
 find_program(ANDROID_NDK_BUILD
     NAMES
     ndk-build.cmd
+    HINTS
+    ${ANDROID_NDK_HINT}
+    DOC "Root directory of android NDK")
+else()
+find_program(ANDROID_NDK_BUILD
+    NAMES
     ndk-build
     HINTS
     ${ANDROID_NDK_HINT}
     DOC "Root directory of android NDK")
+endif()
+
 
 if(NOT ANDROID_NDK_BUILD)
     message(FATAL_ERROR "Need the Android NDK path set, by finding the ndk-build command!")
@@ -171,6 +180,7 @@ find_package(PythonInterp REQUIRED)
 ###
 if(ANDROID_CRYSTAX_NDK)
     message(STATUS "Using a CrystaX NDK")
+    message(STATUS "toolchain is ${ANDROID_TOOLCHAIN}")
     # Use shared libcrystax consistently for all modules.
     osvr_android_add_common_cmake_arg("-DANDROID_CRYSTAX_NDK_SHARED_LIBCRYSTAX=ON")
 else()
