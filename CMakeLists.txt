@@ -20,10 +20,9 @@ set(ANDROID_STL gnustl_static)
 #     set_property(CACHE ANDROID_TOOLCHAIN_NAME PROPERTY STRINGS "arm-linux-androideabi-4.9")
 # endif()
 #
-# if(NOT ANDROID_NATIVE_API_LEVEL)
-#     set(ANDROID_NATIVE_API_LEVEL "19" CACHE STRING "Android Native API Level")
-#     set_property(CACHE ANDROID_NATIVE_API_LEVEL PROPERTY STRINGS "19")
-# endif()
+if(NOT ANDROID_NATIVE_API_LEVEL)
+    set(ANDROID_NATIVE_API_LEVEL "14" CACHE STRING "Android Native API Level")
+endif()
 
 if(NOT ANDROID_GENERATOR)
     if(WIN32)
@@ -130,7 +129,7 @@ macro(_osvr_android_update_common_cmake_args)
         "-DANDROID_STL:STRING=${ANDROID_STL}"
         "-DANDROID_ABI:STRING=${ANDROID_ABI}"
         "-DCMAKE_BUILD_TYPE=${ANDROID_BUILD_TYPE}"
-        # "-DANDROID_NATIVE_API_LEVEL:STRING=${ANDROID_NATIVE_API_LEVEL}"
+        "-DANDROID_NATIVE_API_LEVEL:STRING=${ANDROID_NATIVE_API_LEVEL}"
         ${ANDROID_COMMON_CMAKE_ARGS}
         )
 endmacro()
