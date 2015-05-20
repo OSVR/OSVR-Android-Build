@@ -188,3 +188,9 @@ endif()
 
 # Go into the subdirectory with the projects in it
 add_subdirectory(src)
+
+###
+# Bundle stuff up
+###
+set(CPACK_GENERATOR TGZ)
+include(CPack)
