@@ -119,6 +119,7 @@ ExternalProject_Add(OSVR-Core
     "-DOpenCV_DIR=${OpenCV_DIR}"
     "-DLIBUSB1_LIBRARY=${ANDROID_INSTALL_DIR}/lib/libusb1.0.so" # TODO cmake should be able to find this for us.
     "-DVRPN_HIDAPI_SOURCE_ROOT=${CMAKE_CURRENT_SOURCE_DIR}/hidapi" # Let VRPN build HIDAPI for us.
+    ${OSVR_CORE_PASSTHROUGH_OPTIONS}
     BUILD_IN_SOURCE 0)
 
 

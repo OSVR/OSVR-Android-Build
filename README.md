@@ -40,7 +40,7 @@ Essentially, the super-build is a sort of meta-project or outer shell around the
     - `CMAKE_BUILD_TYPE` - Only for single-configuration CMake generators (so, not for Visual Studio or XCode) - either `Release` or `Debug`
   - optionally specifying these to override defaults:
     - `ANDROID_ABI`
-    - any of the `OSVR_` options
+    - any of the `BUILD_` options: these get passed through to the OSVR-Core cross-build.
   - If using the GUI, "Configure" and "Generate".
 - In the build directory chosen, open the solution/project and build it (the default target), or run `make` or your other build tool (depending on the CMake generator you chose)
   - Build products are installed into your binary directory, in a subdirectory called `install`

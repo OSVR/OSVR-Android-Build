@@ -35,6 +35,23 @@ if(NOT ANDROID_GENERATOR)
 endif()
 
 ###
+# Options that we pass through to OSVR-Core
+###
+
+option(BUILD_SERVER "Should we build the server libraries and required dev tools?" ON)
+option(BUILD_SERVER_EXAMPLES "Should we build the server-related example apps and plugins?" ON)
+option(BUILD_SERVER_APP "Should we build the server app?" ON)
+option(BUILD_SERVER_PLUGINS "Should we build the standard plugins?" ON)
+
+option(BUILD_CLIENT "Should we build the client libraries?" ON)
+option(BUILD_CLIENT_EXAMPLES "Should we build the client example apps?" ON)
+option(BUILD_CLIENT_APPS "Should we build the client apps?" ON)
+
+set(OSVR_CORE_PASSTHROUGH_OPTIONS)
+foreach(opt SERVER SERVER_EXAMPLES SERVER_APP SERVER_PLUGINS CLIENT CLIENT_EXAMPLES CLIENT_APPS)
+    list(APPEND OSVR_CORE_PASSTHROUGH_OPTIONS "-DBUILD_${opt}=${BUILD_${opt}}")
+endforeach()
+###
 # NDK finding - using environment and CMake variables as a hint
 ###
 if(NOT ANDROID_NDK)
