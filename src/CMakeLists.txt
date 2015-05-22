@@ -2,33 +2,37 @@
 # http://www.cmake.org/cmake/help/v3.0/module/ExternalProject.html
 # http://www.kitware.com/media/html/BuildingExternalProjectsWithCMake2.8.html
 
+set(osvr_dep_targets)
 
-###
-# Host (native, not Android) projects from source
-###
-set(HOST_PREFIX_PATH ${CMAKE_PREFIX_PATH})
+if(BUILD_SERVER)
+    ###
+    # Host (native, not Android) projects from source
+    ###
+    set(HOST_PREFIX_PATH ${CMAKE_PREFIX_PATH})
 
-ExternalProject_Add(jsoncpp_host
-    SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/jsoncpp"
-    CMAKE_ARGS
-    "-DCMAKE_INSTALL_PREFIX=${HOST_INSTALL_DIR}"
-    -DJSONCPP_WITH_CMAKE_PACKAGE=ON
-    -DJSONCPP_LIB_BUILD_SHARED=OFF
-    -DJSONCPP_WITH_TESTS=OFF
-    -DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF
-    BUILD_IN_SOURCE 0)
+    ExternalProject_Add(jsoncpp_host
+        SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/jsoncpp"
+        CMAKE_ARGS
+        "-DCMAKE_INSTALL_PREFIX=${HOST_INSTALL_DIR}"
+        -DJSONCPP_WITH_CMAKE_PACKAGE=ON
+        -DJSONCPP_LIB_BUILD_SHARED=OFF
+        -DJSONCPP_WITH_TESTS=OFF
+        -DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF
+        BUILD_IN_SOURCE 0)
 
-list(APPEND HOST_PREFIX_PATH "${HOST_INSTALL_DIR}")
+    list(APPEND HOST_PREFIX_PATH "${HOST_INSTALL_DIR}")
 
-ExternalProject_Add(osvr_json_to_c_host
-    DEPENDS jsoncpp_host
-    SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/osvr_json_to_c"
-    CMAKE_ARGS
-    "-DCMAKE_INSTALL_PREFIX=${HOST_INSTALL_DIR}"
-    "-DCMAKE_PREFIX_PATH=${HOST_PREFIX_PATH}"
-    "-DOSVR_CORE_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core")
+    ExternalProject_Add(osvr_json_to_c_host
+        DEPENDS jsoncpp_host
+        SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/osvr_json_to_c"
+        CMAKE_ARGS
+        "-DCMAKE_INSTALL_PREFIX=${HOST_INSTALL_DIR}"
+        "-DCMAKE_PREFIX_PATH=${HOST_PREFIX_PATH}"
+        "-DOSVR_CORE_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core")
 
-set(OSVR_JSON_TO_C_COMMAND "${HOST_INSTALL_DIR}/bin/osvr_json_to_c")
+    set(OSVR_JSON_TO_C_COMMAND "${HOST_INSTALL_DIR}/bin/osvr_json_to_c")
+    list(APPEND osvr_dep_targets osvr_json_to_c_host)
+endif()
 
 ###
 # Android Binary SDKs
@@ -91,26 +95,32 @@ ExternalProject_Add(jsoncpp
     # put any others here
     BUILD_IN_SOURCE 0)
 
-ExternalProject_Add(libfunctionality
-    SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libfunctionality"
-    INSTALL_DIR "${ANDROID_INSTALL_DIR}"
-    CMAKE_GENERATOR "${ANDROID_GENERATOR}"
-    CMAKE_ARGS ${COMMON_CMAKE_ARGS} # put any others here
-    BUILD_IN_SOURCE 0)
+if(BUILD_SERVER)
+    ExternalProject_Add(libfunctionality
+        SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libfunctionality"
+        INSTALL_DIR "${ANDROID_INSTALL_DIR}"
+        CMAKE_GENERATOR "${ANDROID_GENERATOR}"
+        CMAKE_ARGS ${COMMON_CMAKE_ARGS} # put any others here
+        BUILD_IN_SOURCE 0)
+    list(APPEND osvr_dep_targets libfunctionality)
+endif()
 
-ExternalProject_Add(libusb
-    SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libusb"
-    INSTALL_DIR "${ANDROID_INSTALL_DIR}"
-    CONFIGURE_COMMAND ${ANDROID_NDK_BUILD_WITH_ARGS} clean -C "<SOURCE_DIR>/android/jni"
-    BUILD_COMMAND ${ANDROID_NDK_BUILD_WITH_ARGS} -C "<SOURCE_DIR>/android/jni"
-    INSTALL_COMMAND "${CMAKE_COMMAND}" -E make_directory "<INSTALL_DIR>/include"
-    COMMAND "${CMAKE_COMMAND}" -E copy_if_different "<SOURCE_DIR>/libusb/libusb.h" "<INSTALL_DIR>/include/libusb.h"
-    BUILD_IN_SOURCE 0)
+if(BUILD_SERVER_PLUGINS)
+    ExternalProject_Add(libusb
+        SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libusb"
+        INSTALL_DIR "${ANDROID_INSTALL_DIR}"
+        CONFIGURE_COMMAND ${ANDROID_NDK_BUILD_WITH_ARGS} clean -C "<SOURCE_DIR>/android/jni"
+        BUILD_COMMAND ${ANDROID_NDK_BUILD_WITH_ARGS} -C "<SOURCE_DIR>/android/jni"
+        INSTALL_COMMAND "${CMAKE_COMMAND}" -E make_directory "<INSTALL_DIR>/include"
+        COMMAND "${CMAKE_COMMAND}" -E copy_if_different "<SOURCE_DIR>/libusb/libusb.h" "<INSTALL_DIR>/include/libusb.h"
+        BUILD_IN_SOURCE 0)
+    list(APPEND osvr_dep_targets libusb)
+endif()
 
 ExternalProject_Add(OSVR-Core
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core"
     INSTALL_DIR "${ANDROID_INSTALL_DIR}"
-    DEPENDS jsoncpp libfunctionality OpenCV osvr_json_to_c_host libusb
+    DEPENDS jsoncpp OpenCV ${osvr_dep_targets}
     CMAKE_GENERATOR "${ANDROID_GENERATOR}"
     CMAKE_ARGS
     ${COMMON_CMAKE_ARGS}
