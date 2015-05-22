@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.0)
 project(OSVR-Android LANGUAGES)
 
+if(CMAKE_CROSSCOMPILING)
+    message(FATAL_ERROR "Don't specify a toolchain for this super-build: use your native build tool, the nested builds automatically will have the toolchain specified!")
+endif()
+
 include(ExternalProject)
 
 ###
