@@ -1,3 +1,3 @@
 pushd "%~dp0/build"
-cmake-gui ..
+cmake-gui .. %*
 popd
