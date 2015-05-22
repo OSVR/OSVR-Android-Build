@@ -7,9 +7,14 @@ make_executable() {
 }
 
 make_executable ${launcher}
+
 for app in osvr_server osvr_print_tree AnalogCallback_cpp ButtonCallback_cpp DisplayParameter_cpp PathTreeExport TrackerCallback_cpp; do
-    make_executable ${root}/bin/${app}
-    rm -f ${root}/${app}
-    ln -s ${launcher} ${root}/${app}
-    make_executable ${root}/${app}
+    if [ -e ${root}/bin/${app} ]; then
+        make_executable ${root}/bin/${app}
+        rm -f ${root}/${app}
+        ln -s ${launcher} ${root}/${app}
+        make_executable ${root}/${app}
+    else
+        rm -f ${root}/${app}
+    fi
 done
