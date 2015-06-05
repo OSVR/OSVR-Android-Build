@@ -13,7 +13,7 @@ endif()
 ###
 # Some setup from the main OSVR-Core build system
 ###
-list(APPEND CMAKE_MODULE_PATH "${OSVR_CORE_SOURCE_DIR}/cmake" "${OSVR_CORE_SOURCE_DIR}")
+list(APPEND CMAKE_MODULE_PATH "${OSVR_CORE_SOURCE_DIR}/cmake" "${OSVR_CORE_SOURCE_DIR}/cmake-local" "${OSVR_CORE_SOURCE_DIR}")
 include(MapImportedReleaseVariants)
 include(MSVCMultipleProcessCompile)
 
