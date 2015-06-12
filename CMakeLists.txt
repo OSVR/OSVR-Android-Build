@@ -17,7 +17,10 @@ endif()
 
 # This is the only one that supports rtti and exceptions,
 # except for libc++ which isn't supported by android-cmake yet.
-set(ANDROID_STL gnustl_static)
+#set(ANDROID_STL gnustl_static)
+
+# well, except this one seems to work fine
+set(ANDROID_STL gnustl_shared)
 
 # if(NOT ANDROID_TOOLCHAIN_NAME)
 #     set(ANDROID_TOOLCHAIN_NAME "arm-linux-androideabi-4.9" CACHE STRING "Android Toolchain name")
