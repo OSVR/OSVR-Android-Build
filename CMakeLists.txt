@@ -28,7 +28,7 @@ set(ANDROID_STL gnustl_shared)
 # endif()
 #
 if(NOT ANDROID_NATIVE_API_LEVEL)
-    set(ANDROID_NATIVE_API_LEVEL "14" CACHE STRING "Android Native API Level")
+    set(ANDROID_NATIVE_API_LEVEL "16" CACHE STRING "Android Native API Level")
 endif()
 
 if(NOT ANDROID_GENERATOR)
