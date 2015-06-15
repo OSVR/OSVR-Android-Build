@@ -63,20 +63,14 @@ if(ANDROID_NDK)
 endif()
 
 if(WIN32)
-find_program(ANDROID_NDK_BUILD
-    NAMES
-    ndk-build.cmd
-    HINTS
-    ${ANDROID_NDK_HINT}
-    DOC "Root directory of android NDK")
-else()
-find_program(ANDROID_NDK_BUILD
-    NAMES
-    ndk-build
-    HINTS
-    ${ANDROID_NDK_HINT}
-    DOC "Root directory of android NDK")
+    set(NDK_BUILD_SUFFIX .cmd)
 endif()
+find_program(ANDROID_NDK_BUILD
+    NAMES
+    ndk-build${NDK_BUILD_SUFFIX}
+    HINTS
+    ${ANDROID_NDK_HINT}
+    DOC "Root directory of android NDK")
 
 
 if(NOT ANDROID_NDK_BUILD)
