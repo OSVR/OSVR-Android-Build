@@ -1,9 +1,11 @@
 [submodule "android-cmake"]
 	path = android-cmake
 	url = https://github.com/OSVR/android-cmake.git
+	branch = with-updates-merged
 [submodule "src/libfunctionality"]
 	path = src/libfunctionality
 	url = https://github.com/OSVR/libfunctionality.git
+	branch = master
 [submodule "src/jsoncpp"]
 	path = src/jsoncpp
 	url = https://github.com/vrpn/jsoncpp.git
@@ -19,3 +21,5 @@
 [submodule "src/OSVR-Core"]
 	path = src/OSVR-Core
 	url = https://github.com/OSVR/OSVR-Core.git
+	branch = master
+	fetchRecurseSubmodules = true
