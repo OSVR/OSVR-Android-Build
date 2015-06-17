@@ -13,7 +13,7 @@ in the root directory. (You may want to do the latter after updating this repo, 
 - The latest [CMake][] (3.2.2 verified to work 22-May-2015)
 - The latest [CrystaX NDK][] (10.1.0 verified to work 22-May-2015)
   - There is some code to theoretically support the upstream Android NDK, but it does not work at this time and is not recommended unless you want to help hack on the build system. Anyway, the CrystaX NDK appears to provide other benefits besides reducing dependencies (it comes with Boost already compiled), so it will most likely remain the targeted NDK.
-- Python 2.x
+- Python 2.x (often - always? - included in an NDK)
 - Boost installed on your system for your host compiler (not the android compiler) - specifically we need Boost.ProgramOptions.
 - Optional: Ninja build system installed to somewhere on your path (can be used instead of makefiles)
 
@@ -42,6 +42,7 @@ Essentially, the super-build is a sort of meta-project or outer shell around the
   - optionally specifying these to override defaults:
     - `ANDROID_ABI`
     - `CMAKE_BUILD_TYPE` - Only for single-configuration CMake generators (so, not for Visual Studio or XCode, but yes for makefiles including NMake) - either `Release` or `Debug`, default is `Release`
+    - `CMAKE_PREFIX_PATH` - passed along to nested host builds to help them find dependencies.
     - any of the `BUILD_` options: these get passed through to the OSVR-Core cross-build.
   - If using the GUI, "Configure" and "Generate".
 - In the build directory chosen, open the solution/project and build it (the default target), or run `make` or your other build tool (depending on the CMake generator you chose)
