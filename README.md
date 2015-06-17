@@ -51,6 +51,45 @@ Essentially, the super-build is a sort of meta-project or outer shell around the
   - Run `cpack` in the binary dir/build the "package" target to get a `.tar.gz` file containing just the runtime files, copy that to your Android device and unpack it.
 - Optional (but recommended) step: from a shell (`ssh`, for instance) on the device or over `adb`, run the command `sh setup.sh` in the root directory of the OSVR tree. See below for details. You'll then have a number of executable files (actually symlinks, but that's not important) in the root directory of the OSVR tree on the device for starting bundled apps/tools.
 
+## Build scripts
+
+### Windows
+Running some `configure` script followed by `build.cmd` results in a complete build of the OSVR-Core and dependencies, with the binary tree in the `build` directory. For the inner Android builds, Ninja will be used if it is found on your path, otherwise makefiles compatible with the `make` included in the NDK will be used.
+
+Since these are scripts, your Android NDK needs to be findable somehow: primarily either setting the environment variable `%ANDROID_NDK%` in the console you use to build or passing `-DANDROID_NDK=c:/myndkpath` as a command line argument to configure.
+
+All configure scripts set up a Release-mode build unless you specify otherwise. Ninja is the fastest, in this case because it's the only system that will take advantage of parallelism without contortions.
+
+#### Configure scripts
+
+- `configure-nmake.cmd` - Run from a Visual Studio command prompt.
+	- Super-build is driven by Microsoft `nmake`
+	- Host binaries are compiled with Visual Studio compilers using `nmake`
+	- Does not require `%ANDROID_NDK%` to be set in the environment.
+- `configure-ninja.cmd` - Run from either a Visual Studio command prompt or a command prompt with MinGW(64) compilers accessible, and with ninja in your path.
+	- Super-build is driven by ninja.
+	- Host binaries are compiled with whatever compilers CMake can find, driven by ninja.
+	- Does not require `%ANDROID_NDK%` to be set in the environment.
+- `configure-mingw.cmd` - Run from a command prompt with MinGW(64) compilers accessible.
+	- Super-build is driven by `make` found in the NDK.
+	- Host binaries are compiled with MinGW, driven by the NDK's `make`.
+	- **Requires `%ANDROID_NDK%` to be set in the environment** (so the super-build's make can be found statically).
+
+#### Post-configure scripts
+Once you've run a configure script, you can proceed to run these scripts, as desired, in the same console for safety's sake.
+
+- `build.cmd` - Regardless of build system and compilers chosen, runs a full build, which involves building host binaries and installing them to the `build/host-install` prefix, and building Android binaries and installing them to the `build/install` prefix.
+- `package.cmd` - Following a build, packages up just the runtime pieces (suitable to run a server and test clients) of the Android build in a `.tar.gz` file in `build/`
+
+### Not Windows
+
+"Not Windows" systems are expected to have an NDK, as well as some suitable host compiler and `make` installed (by default).
+
+- `configure-mostly-clean.sh` is a script used by CI compilation of this distribution, and you can use it too.
+	- If there is already a build tree in `build/`, it mostly wipes it out, excluding the super-build configuration and the OpenCV-Android SDK download. (hence "mostly-clean")
+	- It then ensures `build/` exists and runs `cmake` to generate/update a build tree there, passing along any command-line arguments you provide.
+- `build.sh` - Uses CMake to invoke whatever build system was generated in `build/`. Yes, this means it's often just a fancy way to say `make`.
+
 ## Convenience scripts
 The build includes some simple scripts intended for running on the device that are optional but make testing/usage easier. They require Busybox to be installed and in the path. If you can't/don't want to use them, you can just read them to see what they're doing.
 
