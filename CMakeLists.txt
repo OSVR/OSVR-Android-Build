@@ -85,7 +85,7 @@ if(NOT CMAKE_CONFIGURATION_TYPES)
     if(NOT CMAKE_BUILD_TYPE)
         # no config set.
         set(ANDROID_BUILD_TYPE Release)
-    elseif("${CMAKE_BUILD_TYPE}" STREQUAL "Release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+    elseif("${CMAKE_BUILD_TYPE}" STREQUAL "Release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
         # OK config set
         set(ANDROID_BUILD_TYPE ${CMAKE_BUILD_TYPE})
     else()# bad config set
