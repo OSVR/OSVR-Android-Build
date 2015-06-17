@@ -112,8 +112,8 @@ if(BUILD_SERVER_PLUGINS)
         INSTALL_DIR "${ANDROID_INSTALL_DIR}"
         CONFIGURE_COMMAND ${ANDROID_NDK_BUILD_WITH_ARGS} clean -C "<SOURCE_DIR>/android/jni"
         BUILD_COMMAND ${ANDROID_NDK_BUILD_WITH_ARGS} -C "<SOURCE_DIR>/android/jni"
-        INSTALL_COMMAND "${CMAKE_COMMAND}" -E make_directory "<INSTALL_DIR>/include"
-        COMMAND "${CMAKE_COMMAND}" -E copy_if_different "<SOURCE_DIR>/libusb/libusb.h" "<INSTALL_DIR>/include/libusb.h"
+        INSTALL_COMMAND "${CMAKE_COMMAND}" -E make_directory "<INSTALL_DIR>/include/libusb-1.0"
+        COMMAND "${CMAKE_COMMAND}" -E copy_if_different "<SOURCE_DIR>/libusb/libusb.h" "<INSTALL_DIR>/include/libusb-1.0/libusb.h"
         BUILD_IN_SOURCE 0)
     list(APPEND osvr_dep_targets libusb)
 endif()
