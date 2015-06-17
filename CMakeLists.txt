@@ -210,12 +210,13 @@ find_package(PythonInterp REQUIRED)
 ###
 if(ANDROID_CRYSTAX_NDK)
     message(STATUS "Using a CrystaX NDK")
-    message(STATUS "toolchain is ${ANDROID_TOOLCHAIN}")
     # Use shared libcrystax consistently for all modules.
     osvr_android_add_common_cmake_arg("-DANDROID_CRYSTAX_NDK_SHARED_LIBCRYSTAX=ON")
 else()
     message(STATUS "Using a standard (Google) Android NDK")
 endif()
+message(STATUS "ANDROID_NDK: ${ANDROID_NDK}")
+message(STATUS "ANDROID_ABI: ${ANDROID_ABI}")
 
 # Go into the subdirectory with the projects in it
 add_subdirectory(src)
