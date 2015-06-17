@@ -59,7 +59,7 @@ if(NOT ANDROID_CRYSTAX_NDK)
     # In this case, we need boost.
     if(WIN32)
         # and msys bash
-        find_program(SH_COMMAND NAMES bash.exe dash.exe sh.exe)
+        find_program(SH_COMMAND NAMES bash.exe dash.exe ash.sh sh.exe)
         if(NOT SH_COMMAND)
             message(FATAL_ERROR "Missing msys sh - needed to build Boost. Either set SH_COMMAND or use the CrystaX NDK (which includes boost)")
         endif()
