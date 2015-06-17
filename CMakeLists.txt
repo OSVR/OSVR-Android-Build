@@ -103,9 +103,13 @@ endif()
 ###
 # Setting some variables and properties
 ###
-if(EXISTS "${ANDROID_NDK}/sources/crystax")
-    # We have the CrystaX NDK. This is just a simple way to check
-    set(ANDROID_CRYSTAX_NDK ON)
+
+# Excerpted/modified from the code we added to detect CrystaX in android-cmake
+if(EXISTS "${ANDROID_NDK}/RELEASE.TXT")
+    file(STRINGS "${ANDROID_NDK}/RELEASE.TXT" ANDROID_NDK_GENERIC_RELEASE_FULL LIMIT_COUNT 1 REGEX "[^ ]+")
+    if(ANDROID_NDK_GENERIC_RELEASE_FULL AND ANDROID_NDK_GENERIC_RELEASE_FULL MATCHES "crystax-ndk")
+        set(ANDROID_CRYSTAX_NDK ON)
+    endif()
 endif()
 
 set(ANDROID_TOOLCHAIN "${CMAKE_CURRENT_SOURCE_DIR}/android-cmake/android.toolchain.cmake")
