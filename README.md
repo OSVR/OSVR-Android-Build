@@ -91,7 +91,7 @@ Once you've run a configure script, you can proceed to run these scripts, as des
 	- It then ensures `build/` exists and runs `cmake` to generate/update a build tree there, passing along any command-line arguments you provide.
 - `build.sh` - Uses CMake to invoke whatever build system was generated in `build/`. Yes, this means it's often just a fancy way to say `make`.
 
-## Convenience scripts
+## On-device convenience scripts
 The build includes some simple scripts intended for running on the device that are optional but make testing/usage easier. They require Busybox to be installed and in the path. If you can't/don't want to use them, you can just read them to see what they're doing.
 
 - `setup.sh` in the root directory of the tree takes care of setting executable permissions on the binaries and scripts (in case you built on Windows or otherwise couldn't preserve the desired permissions during file creation/transfer), and also creates symlinks in the tree root to `bin/launcher.sh` for simple starting of various applications.
