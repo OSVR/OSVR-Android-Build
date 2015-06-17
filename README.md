@@ -15,12 +15,13 @@ in the root directory. (You may want to do the latter after updating this repo, 
   - There is some code to theoretically support the upstream Android NDK, but it does not work at this time and is not recommended unless you want to help hack on the build system. Anyway, the CrystaX NDK appears to provide other benefits besides reducing dependencies (it comes with Boost already compiled), so it will most likely remain the targeted NDK.
 - Python 2.x
 - Boost installed on your system for your host compiler (not the android compiler) - specifically we need Boost.ProgramOptions.
+- Optional: Ninja build system installed to somewhere on your path (can be used instead of makefiles)
 
 [CMake]: http://cmake.org
 [CrystaX NDK]: https://www.crystax.net/android/ndk
 
 ## Build Overview
-This repository's primary contents, besides the submodules, is a CMake build system using the [ExternalProject][] functionality to control nested configuration and build processes - the so-called "super-build". You should configure it using your **standard, native platform build platform** (Visual Studio, MinGW, Unix Makefiles, whatever suits you). With the correct setting of things like the `ANDROID_NDK` variable in the super-build's CMake configuration (command line or GUI), **the build will automatically set up the cross-compilation toolchain of nested builds** as required.
+This repository's primary contents, besides the submodules, is a CMake build system using the [ExternalProject][] functionality to control nested configuration and build processes - the so-called "super-build". You should configure it using your **standard, native platform build platform** (Visual Studio, MinGW, Unix Makefiles, Ninja, whatever suits you). With the correct setting of things like the `ANDROID_NDK` variable in the super-build's CMake configuration (command line or GUI), **the build will automatically set up the cross-compilation toolchain of nested builds** as required.
 
 Essentially, the super-build is a sort of meta-project or outer shell around the nested builds, with configuration, build, and install of the nested builds as targets in the super-build.
 

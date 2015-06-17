@@ -31,15 +31,21 @@ if(NOT ANDROID_NATIVE_API_LEVEL)
     set(ANDROID_NATIVE_API_LEVEL "16" CACHE STRING "Android Native API Level")
 endif()
 
+
+if(WIN32)
+    set(MAKEFILE_GENERATOR "MinGW Makefiles")
+else()
+    set(MAKEFILE_GENERATOR "Unix Makefiles")
+endif()
 if(NOT ANDROID_GENERATOR)
-    if(WIN32)
-        set(ANDROID_GENERATOR "MinGW Makefiles" CACHE STRING "The CMake generator to use when building projects.")
-        set_property(CACHE ANDROID_GENERATOR PROPERTY STRINGS "MinGW Makefiles" "Ninja")
+    find_program(NINJA_COMMAND ninja)
+    if(NINJA_COMMAND)
+        set(ANDROID_GENERATOR "Ninja" CACHE STRING "The CMake generator to use when building projects.")
     else()
-        set(ANDROID_GENERATOR "Unix Makefiles" CACHE STRING "The CMake generator to use when building projects.")
-        set_property(CACHE ANDROID_GENERATOR PROPERTY STRINGS "Unix Makefiles" "Ninja")
+        set(ANDROID_GENERATOR "${MAKEFILE_GENERATOR}" CACHE STRING "The CMake generator to use when building projects.")
     endif()
 endif()
+set_property(CACHE ANDROID_GENERATOR PROPERTY STRINGS "${MAKEFILE_GENERATOR}" "Ninja")
 
 ###
 # Options that we pass through to OSVR-Core
@@ -166,22 +172,26 @@ endmacro()
 osvr_android_add_to_common_prefix_path("${ANDROID_INSTALL_DIR}")
 
 ###
-# Find make
+# Find/use make/ninja
 ###
-if(WIN32)
-    if("${ANDROID_GENERATOR}" STREQUAL "MinGW Makefiles")
-        find_program(ANDROID_NDK_MAKE
-            NAMES
-            make.exe
-            make
-            HINTS
-            ${ANDROID_NDK}/prebuilt/windows-x86_64/bin)
-        if(NOT ANDROID_NDK_MAKE)
-            message(FATAL_ERROR "Need the location of a make executable - usually bundled with the NDK!")
-        endif()
-        osvr_android_add_common_cmake_arg("-DCMAKE_MAKE_PROGRAM=${ANDROID_NDK_MAKE}")
+if("${ANDROID_GENERATOR}" STREQUAL "MinGW Makefiles")
+    find_program(ANDROID_NDK_MAKE
+        NAMES
+        make.exe
+        make
+        HINTS
+        ${ANDROID_NDK}/prebuilt/windows-x86_64/bin)
+    if(NOT ANDROID_NDK_MAKE)
+        message(FATAL_ERROR "Need the location of a make executable - usually bundled with the NDK!")
     endif()
-    # todo find ninja
+    osvr_android_add_common_cmake_arg("-DCMAKE_MAKE_PROGRAM=${ANDROID_NDK_MAKE}")
+endif()
+
+if("${ANDROID_GENERATOR}" STREQUAL "Ninja")
+    if(NOT NINJA_COMMAND)
+        message(FATAL_ERROR "Ninja generator was selected, so need the location of a ninja executable in NINJA_COMMAND! (or switch to the makefiles generator)")
+    endif()
+    osvr_android_add_common_cmake_arg("-DCMAKE_MAKE_PROGRAM=${NINJA_COMMAND}")
 endif()
 
 ###
