@@ -41,9 +41,28 @@ endif()
 
 # OpenCV has a binary SDK for Android - just download and unpack.
 set(OPENCV_VERSION 2.4.11)
+set(SHA1 ACFB4789B78752AE5C52CC5C151E2AE3DD006CEF)
+set(FN OpenCV-${OPENCV_VERSION}-android-sdk.zip)
+# Use our own script to download, since ExternalProject re-downloads too often.
+add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${FN}"
+    # Downlaod the file if we need it.
+    COMMAND "${CMAKE_COMMAND}"
+    "-DEXTERNAL_LOCATION=${CMAKE_CURRENT_SOURCE_DIR}/${FN}"
+    "-DLOCAL_LOCATION=${CMAKE_CURRENT_BINARY_DIR}/${FN}"
+    "-DURL=http://downloads.sourceforge.net/project/opencvlibrary/opencv-android/${OPENCV_VERSION}/${FN}"
+    "-DSHA1=${SHA1}"
+    -P "${CMAKE_CURRENT_SOURCE_DIR}/DownloadScript.cmake"
+    # Once we have it, copy it to the source tree to save download time.
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_CURRENT_BINARY_DIR}/${FN}" "${CMAKE_CURRENT_SOURCE_DIR}/${FN}"
+    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/DownloadScript.cmake"
+    VERBATIM)
+add_custom_target(OpenCV_Download DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/${FN}")
+
 ExternalProject_Add(OpenCV
-    URL http://downloads.sourceforge.net/project/opencvlibrary/opencv-android/${OPENCV_VERSION}/OpenCV-${OPENCV_VERSION}-android-sdk.zip
-    URL_HASH SHA1=ACFB4789B78752AE5C52CC5C151E2AE3DD006CEF
+    DEPENDS OpenCV_Download
+#    URL http://downloads.sourceforge.net/project/opencvlibrary/opencv-android/${OPENCV_VERSION}/OpenCV-${OPENCV_VERSION}-android-sdk.zip
+    URL "${CMAKE_CURRENT_BINARY_DIR}/${FN}"
+    URL_HASH SHA1=${SHA1}
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND "")
