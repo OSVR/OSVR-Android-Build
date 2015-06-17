@@ -39,9 +39,9 @@ Essentially, the super-build is a sort of meta-project or outer shell around the
   - setting the build/binary directory to a different directory
   - specifying the required variables:
     - `ANDROID_NDK` - the location of the NDK (the root of it)
-    - `CMAKE_BUILD_TYPE` - Only for single-configuration CMake generators (so, not for Visual Studio or XCode) - either `Release` or `Debug`
   - optionally specifying these to override defaults:
     - `ANDROID_ABI`
+    - `CMAKE_BUILD_TYPE` - Only for single-configuration CMake generators (so, not for Visual Studio or XCode, but yes for makefiles including NMake) - either `Release` or `Debug`, default is `Release`
     - any of the `BUILD_` options: these get passed through to the OSVR-Core cross-build.
   - If using the GUI, "Configure" and "Generate".
 - In the build directory chosen, open the solution/project and build it (the default target), or run `make` or your other build tool (depending on the CMake generator you chose)
