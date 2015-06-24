@@ -155,6 +155,7 @@ ExternalProject_Add(OSVR-Core
 
 configure_file(packaging/setup.sh ${ANDROID_INSTALL_DIR}/setup.sh COPYONLY)
 configure_file(packaging/launcher.sh ${ANDROID_INSTALL_DIR}/bin/launcher.sh COPYONLY)
+configure_file(InstallTreeSuperBuildPrefix.cmake ${ANDROID_INSTALL_DIR}/lib/cmake/osvr/osvrConfigSuperBuildPrefix.cmake COPYONLY)
 install(DIRECTORY ${ANDROID_INSTALL_DIR}/bin/ DESTINATION bin)
 install(DIRECTORY ${ANDROID_INSTALL_DIR}/lib/ DESTINATION lib
     FILES_MATCHING
