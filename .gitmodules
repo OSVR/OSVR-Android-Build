@@ -23,3 +23,6 @@
 	url = https://github.com/OSVR/OSVR-Core.git
 	branch = master
 	fetchRecurseSubmodules = true
+[submodule "src/android_sensor_tracker"]
+	path = src/android_sensor_tracker
+	url = https://github.com/OSVR/OSVR-Android-Plugins.git

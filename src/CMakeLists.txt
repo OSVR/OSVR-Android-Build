@@ -135,6 +135,17 @@ if(BUILD_SERVER_PLUGINS)
         COMMAND "${CMAKE_COMMAND}" -E copy_if_different "<SOURCE_DIR>/libusb/libusb.h" "<INSTALL_DIR>/include/libusb-1.0/libusb.h"
         BUILD_IN_SOURCE 0)
     list(APPEND osvr_dep_targets libusb)
+
+    ExternalProject_Add(android_sensor_tracker
+            SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android_sensor_tracker"
+            INSTALL_DIR "${ANDROID_INSTALL_DIR}"
+            CMAKE_GENERATOR "${ANDROID_GENERATOR}"
+            CMAKE_ARGS
+            "-DOSVR_JSON_TO_C_COMMAND=${OSVR_JSON_TO_C_COMMAND}"
+            "-DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}" # Have to pass in "host" python TODO is this actually needed?
+            ${OSVR_CORE_PASSTHROUGH_OPTIONS}
+            BUILD_IN_SOURCE 0)
+    list(APPEND osvr_dep_targets android_sensor_tracker)
 endif()
 
 ExternalProject_Add(OSVR-Core
