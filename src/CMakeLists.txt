@@ -4,6 +4,21 @@
 
 set(osvr_dep_targets)
 
+# Stores the paths to the build stamp files we want to delete if we build the "force_rebuild" target
+set(force_build_stamps)
+set(force_build_targets)
+
+# pass the external project target name, then any steps you want to
+# force in addition to just "build"
+function(add_ep_to_force _target)
+    ExternalProject_Get_Property(${_target} STAMP_DIR)
+    foreach(step build ${ARGN})
+        list(APPEND force_build_stamps "${STAMP_DIR}/${_target}-${step}")
+    endforeach()
+    set(force_build_targets ${force_build_targets} ${_target} PARENT_SCOPE)
+    set(force_build_stamps "${force_build_stamps}" PARENT_SCOPE)
+endfunction()
+
 if(BUILD_SERVER)
     ###
     # Host (native, not Android) projects from source
@@ -20,7 +35,7 @@ if(BUILD_SERVER)
         -DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF
         "-DCMAKE_PREFIX_PATH=${HOST_PREFIX_PATH}"
         BUILD_IN_SOURCE 0)
-
+    add_ep_to_force(jsoncpp_host)
     list(APPEND HOST_PREFIX_PATH "${HOST_INSTALL_DIR}")
 
     ExternalProject_Add(osvr_json_to_c_host
@@ -33,6 +48,7 @@ if(BUILD_SERVER)
 
     set(OSVR_JSON_TO_C_COMMAND "${HOST_INSTALL_DIR}/bin/osvr_json_to_c")
     list(APPEND osvr_dep_targets osvr_json_to_c_host)
+    add_ep_to_force(osvr_json_to_c_host)
 endif()
 
 ###
@@ -114,6 +130,7 @@ ExternalProject_Add(jsoncpp
     -DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF
     # put any others here
     BUILD_IN_SOURCE 0)
+add_ep_to_force(jsoncpp)
 
 if(BUILD_SERVER)
     ExternalProject_Add(libfunctionality
@@ -123,6 +140,7 @@ if(BUILD_SERVER)
         CMAKE_ARGS ${COMMON_CMAKE_ARGS} # put any others here
         BUILD_IN_SOURCE 0)
     list(APPEND osvr_dep_targets libfunctionality)
+    add_ep_to_force(libfunctionality)
 endif()
 
 if(BUILD_SERVER_PLUGINS)
@@ -151,7 +169,20 @@ ExternalProject_Add(OSVR-Core
     "-DVRPN_HIDAPI_SOURCE_ROOT=${CMAKE_CURRENT_SOURCE_DIR}/hidapi" # Let VRPN build HIDAPI for us.
     ${OSVR_CORE_PASSTHROUGH_OPTIONS}
     BUILD_IN_SOURCE 0)
+add_ep_to_force(OSVR-Core)
 
+# Add the custom target to delete the build stamps
+add_custom_target(force_rebuild
+    COMMAND "${CMAKE_COMMAND}" -E remove -f ${force_build_stamps}
+    COMMENT "Clearing build stamps to force rebuild of:\n${force_build_targets}"
+    VERBATIM)
+
+set_target_properties(force_rebuild
+    PROPERTIES
+    EXCLUDE_FROM_ALL
+    TRUE)
+message(STATUS "To tell the build system to proceed to build a subproject that you might have changed directly, build the force_rebuild target then the target you want.")
+message(STATUS "Projects: ${force_build_targets}")
 
 configure_file(packaging/setup.sh ${ANDROID_INSTALL_DIR}/setup.sh COPYONLY)
 configure_file(packaging/launcher.sh ${ANDROID_INSTALL_DIR}/bin/launcher.sh COPYONLY)
