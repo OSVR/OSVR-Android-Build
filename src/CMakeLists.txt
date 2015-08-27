@@ -2,6 +2,8 @@
 # http://www.cmake.org/cmake/help/v3.0/module/ExternalProject.html
 # http://www.kitware.com/media/html/BuildingExternalProjectsWithCMake2.8.html
 
+# Since what OSVR-Core depends on varies based on build configurations, we
+# accumulate the dependencies in this variable.
 set(osvr_dep_targets)
 
 # Stores the paths to the build stamp files we want to delete if we build the "force_rebuild" target
