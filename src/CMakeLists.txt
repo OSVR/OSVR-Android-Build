@@ -137,6 +137,15 @@ if(BUILD_SERVER_PLUGINS)
     list(APPEND osvr_dep_targets libusb)
 endif()
 
+###
+# Flags that will be used not only by OSVR-Core but by any plugins:
+
+# Must set this, to avoid finding MinGW or other local, native OpenCV's
+osvr_android_add_common_cmake_arg("-DOpenCV_DIR=${OpenCV_DIR}")
+
+# Indicate where osvr_json_to_c is for ease of use
+osvr_android_add_common_cmake_arg("-DOSVR_JSON_TO_C_COMMAND=${OSVR_JSON_TO_C_COMMAND}")
+
 ExternalProject_Add(OSVR-Core
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core"
     INSTALL_DIR "${ANDROID_INSTALL_DIR}"
@@ -144,25 +153,21 @@ ExternalProject_Add(OSVR-Core
     CMAKE_GENERATOR "${ANDROID_GENERATOR}"
     CMAKE_ARGS
     ${COMMON_CMAKE_ARGS}
-    "-DOSVR_JSON_TO_C_COMMAND=${OSVR_JSON_TO_C_COMMAND}"
     "-DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}" # Have to pass in "host" python TODO is this actually needed?
-    "-DOpenCV_DIR=${OpenCV_DIR}"
     "-DLIBUSB1_LIBRARY=${ANDROID_INSTALL_DIR}/lib/libusb1.0.so" # TODO cmake should be able to find this for us.
     "-DVRPN_HIDAPI_SOURCE_ROOT=${CMAKE_CURRENT_SOURCE_DIR}/hidapi" # Let VRPN build HIDAPI for us.
     ${OSVR_CORE_PASSTHROUGH_OPTIONS}
     BUILD_IN_SOURCE 0)
 
 if(BUILD_SERVER_PLUGINS)
-  ExternalProject_Add(android_sensor_tracker
-          SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android_sensor_tracker"
-          INSTALL_DIR "${ANDROID_INSTALL_DIR}"
-          DEPENDS OSVR-Core
-          CMAKE_GENERATOR "${ANDROID_GENERATOR}"
-          CMAKE_ARGS
-          "-DOSVR_JSON_TO_C_COMMAND=${OSVR_JSON_TO_C_COMMAND}"
-          "-DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}" # Have to pass in "host" python TODO is this actually needed?
-          ${COMMON_CMAKE_ARGS}
-          BUILD_IN_SOURCE 0)
+    ExternalProject_Add(android_sensor_tracker
+        SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android_sensor_tracker"
+        INSTALL_DIR "${ANDROID_INSTALL_DIR}"
+        DEPENDS OSVR-Core
+        CMAKE_GENERATOR "${ANDROID_GENERATOR}"
+        CMAKE_ARGS
+        ${COMMON_CMAKE_ARGS}
+        BUILD_IN_SOURCE 0)
 endif()
 
 configure_file(packaging/setup.sh ${ANDROID_INSTALL_DIR}/setup.sh COPYONLY)
