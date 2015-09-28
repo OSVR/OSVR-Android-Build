@@ -161,13 +161,22 @@ ExternalProject_Add(OSVR-Core
 
 if(BUILD_SERVER_PLUGINS)
     ExternalProject_Add(android_sensor_tracker
-        SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android_sensor_tracker"
+        SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android_sensor_tracker/com_osvr_android_sensorTracker"
         INSTALL_DIR "${ANDROID_INSTALL_DIR}"
         DEPENDS OSVR-Core
         CMAKE_GENERATOR "${ANDROID_GENERATOR}"
         CMAKE_ARGS
         ${COMMON_CMAKE_ARGS}
         BUILD_IN_SOURCE 0)
+
+      ExternalProject_Add(jniImaging
+          SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android_sensor_tracker/com_osvr_android_jniImaging"
+          INSTALL_DIR "${ANDROID_INSTALL_DIR}"
+          DEPENDS OSVR-Core
+          CMAKE_GENERATOR "${ANDROID_GENERATOR}"
+          CMAKE_ARGS
+          ${COMMON_CMAKE_ARGS}
+          BUILD_IN_SOURCE 0)
 endif()
 
 configure_file(packaging/setup.sh ${ANDROID_INSTALL_DIR}/setup.sh COPYONLY)
