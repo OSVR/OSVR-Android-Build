@@ -51,11 +51,12 @@ set_property(CACHE ANDROID_GENERATOR PROPERTY STRINGS "${MAKEFILE_GENERATOR}" "N
 # Options that we pass through to OSVR-Core
 ###
 include("${CMAKE_CURRENT_SOURCE_DIR}/src/OSVR-Core/cmake-local/osvrBuildOptions.cmake")
-
 set(OSVR_CORE_PASSTHROUGH_OPTIONS)
 foreach(opt ${OSVR_BUILD_OPTIONS})
     list(APPEND OSVR_CORE_PASSTHROUGH_OPTIONS "-DBUILD_${opt}=${BUILD_${opt}}")
 endforeach()
+
+list(APPEND OSVR_CORE_PASSTHROUGH_OPTIONS "-DOSVR_COMMON_IN_PROCESS_IMAGING=1")
 
 ###
 # NDK finding - using environment and CMake variables as a hint
