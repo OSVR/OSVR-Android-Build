@@ -187,6 +187,12 @@ ExternalProject_Add(OSVR-RenderManager
     CMAKE_GENERATOR "${ANDROID_GENERATOR}"
     CMAKE_ARGS
     ${COMMON_CMAKE_ARGS}
+    "-DEIGEN3_INCLUDE_DIR:PATH=${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core/vendor/eigen-3.2.7"
+    "-DVRPN_INCLUDE_DIR:PATH=${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core/vendor/vrpn"
+    "-DVRPN_LIBRARY:PATH=${CMAKE_CURRENT_BINARY_DIR}/OSVR-Core-prefix/src/OSVR-Core-build/bin/libvrpnserver.a"
+    "-DQUATLIB_INCLUDE_DIR:PATH=${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core/vendor/vrpn/quat"
+    "-DQUATLIB_LIBRARY:PATH=${CMAKE_CURRENT_BINARY_DIR}/OSVR-Core-prefix/src/OSVR-Core-build/bin/libquat.a"
+    "-DCMAKE_CXX_FLAGS:STRING=-std=c++11"
     BUILD_IN_SOURCE 0)
 add_ep_to_force(OSVR-RenderManager)
 
