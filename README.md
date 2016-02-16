@@ -34,6 +34,7 @@ Essentially, the super-build is a sort of meta-project or outer shell around the
 
 ## Build/usage instructions
 - Download and unpack the NDK somewhere convenient.
+- Set the ANDROID_NDK environment variable to point to where you unpacked the NDK.  On Linux when using the BASH shell, you do this like: **export ANDROID_NDK=~/crystax-ndk-1.10.0** and on Windows you do it it under Properties/Advanced system settings/Advanced/Environment Variables/User variables.
 - Clone the repository and submodules.
 - Run CMake/CMake GUI on the top-level directory:
   - setting the build/binary directory to a different directory
