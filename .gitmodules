@@ -26,3 +26,6 @@
 [submodule "src/android_sensor_tracker"]
 	path = src/android_sensor_tracker
 	url = https://github.com/OSVR/OSVR-Android-Plugins.git
+[submodule "src/OSVR-RenderManager"]
+	path = src/OSVR-RenderManager
+	url = https://github.com/sensics/OSVR-RenderManager.git
