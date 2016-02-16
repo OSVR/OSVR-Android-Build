@@ -194,6 +194,16 @@ ExternalProject_Add(OSVR-Core
     BUILD_IN_SOURCE 0)
 add_ep_to_force(OSVR-Core)
 
+ExternalProject_Add(OSVR-RenderManager
+    SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/OSVR-RenderManager"
+    INSTALL_DIR "${ANDROID_INSTALL_DIR}"
+    DEPENDS OSVR-Core
+    CMAKE_GENERATOR "${ANDROID_GENERATOR}"
+    CMAKE_ARGS
+    ${COMMON_CMAKE_ARGS}
+    BUILD_IN_SOURCE 0)
+add_ep_to_force(OSVR-RenderManager)
+
 if(BUILD_SERVER_PLUGINS)
     ExternalProject_Add(android_sensor_tracker
         SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android_sensor_tracker/com_osvr_android_sensorTracker"
