@@ -102,6 +102,32 @@ ExternalProject_Add(OpenCV
 ExternalProject_Get_Property(OpenCV SOURCE_DIR)
 set(OpenCV_DIR "${SOURCE_DIR}/sdk/native/jni")
 
+# SDL 2.0 has a source zip file for Android.
+set(SHA1 00b2abe02de0ab1c9565955d56e6ac66bd342c07)
+set(FN2 SDL2-2.0.4.zip)
+# Use our own script to download, since ExternalProject re-downloads too often.
+add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${FN2}"
+    # Downlaod the file if we need it.
+    COMMAND "${CMAKE_COMMAND}"
+    "-DEXTERNAL_LOCATION=${CMAKE_CURRENT_SOURCE_DIR}/${FN2}"
+    "-DLOCAL_LOCATION=${CMAKE_CURRENT_BINARY_DIR}/${FN2}"
+    "-DSHA1=${SHA1}"
+    "-DURL=http://www.libsdl.org/release/${FN2}"
+    -P "${CMAKE_CURRENT_SOURCE_DIR}/DownloadScript.cmake"
+    # Once we have it, copy it to the source tree to save download time.
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_CURRENT_BINARY_DIR}/${FN}" "${CMAKE_CURRENT_SOURCE_DIR}/${FN2}"
+    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/DownloadScript.cmake"
+    VERBATIM)
+add_custom_target(SDL2_Download DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/${FN2}")
+
+ExternalProject_Add(SDL2
+    DEPENDS SDL2_Download
+    URL "${CMAKE_CURRENT_BINARY_DIR}/${FN2}"
+    URL_HASH SHA1=${SHA1}
+    CONFIGURE_COMMAND ../SDL2/configure "--prefix=${ANDROID_INSTALL_DIR}"
+    BUILD_COMMAND make
+    INSTALL_COMMAND make install)
+
 ###
 # Conditionally build Boost
 ###
@@ -197,7 +223,7 @@ add_ep_to_force(OSVR-Core)
 ExternalProject_Add(OSVR-RenderManager
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/OSVR-RenderManager"
     INSTALL_DIR "${ANDROID_INSTALL_DIR}"
-    DEPENDS OSVR-Core
+    DEPENDS OSVR-Core SDL2
     CMAKE_GENERATOR "${ANDROID_GENERATOR}"
     CMAKE_ARGS
     ${COMMON_CMAKE_ARGS}
