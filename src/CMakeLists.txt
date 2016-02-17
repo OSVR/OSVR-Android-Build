@@ -107,13 +107,20 @@ add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${FN2}"
     VERBATIM)
 add_custom_target(SDL2_Download DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/${FN2}")
 
+# Instructions at end of https://wiki.libsdl.org/Android indicate that this
+# is experimental but should work (toolchain is defined in the COMMON_CMAKE_ARGS).
+# @todo Why is it having a problem finding wchar_t?
 ExternalProject_Add(SDL2
     DEPENDS SDL2_Download
     URL "${CMAKE_CURRENT_BINARY_DIR}/${FN2}"
     URL_HASH SHA1=${SHA1}
-    CONFIGURE_COMMAND ../SDL2/configure "--prefix=${ANDROID_INSTALL_DIR}"
-    BUILD_COMMAND make
-    INSTALL_COMMAND make install)
+    CMAKE_GENERATOR "${ANDROID_GENERATOR}"
+    CMAKE_ARGS
+    ${COMMON_CMAKE_ARGS}
+    #CONFIGURE_COMMAND ../SDL2/configure "--prefix=${ANDROID_INSTALL_DIR}"
+    #BUILD_COMMAND make
+    #INSTALL_COMMAND make install)
+)
 
 ###
 # Conditionally build Boost
