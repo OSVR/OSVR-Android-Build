@@ -117,9 +117,10 @@ ExternalProject_Add(SDL2
     CMAKE_GENERATOR "${ANDROID_GENERATOR}"
     CMAKE_ARGS
     ${COMMON_CMAKE_ARGS}
-    #CONFIGURE_COMMAND ../SDL2/configure "--prefix=${ANDROID_INSTALL_DIR}"
+    -DCMAKE_VERBOSE_MAKEFILE=TRUE
+    #CONFIGURE_COMMAND ../SDL2/configure "--prefix=${ANDROID_INSTALL_DIR}" -host=arm-eabi
     #BUILD_COMMAND make
-    #INSTALL_COMMAND make install)
+    #INSTALL_COMMAND make install
 )
 
 ###
