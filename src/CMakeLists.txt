@@ -104,36 +104,36 @@ set(OpenCV_DIR "${SOURCE_DIR}/sdk/native/jni")
 
 # SDL 2.0 has a source zip file for Android.
 set(SHA1 00b2abe02de0ab1c9565955d56e6ac66bd342c07)
-set(FN2 SDL2-2.0.4.zip)
+set(FN SDL2-2.0.4.zip)
 # Use our own script to download, since ExternalProject re-downloads too often.
-add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${FN2}"
+add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${FN}"
     # Downlaod the file if we need it.
     COMMAND "${CMAKE_COMMAND}"
-    "-DEXTERNAL_LOCATION=${CMAKE_CURRENT_SOURCE_DIR}/${FN2}"
-    "-DLOCAL_LOCATION=${CMAKE_CURRENT_BINARY_DIR}/${FN2}"
+    "-DEXTERNAL_LOCATION=${CMAKE_CURRENT_SOURCE_DIR}/${FN}"
+    "-DLOCAL_LOCATION=${CMAKE_CURRENT_BINARY_DIR}/${FN}"
     "-DSHA1=${SHA1}"
-    "-DURL=http://www.libsdl.org/release/${FN2}"
+    "-DURL=http://www.libsdl.org/release/${FN}"
     -P "${CMAKE_CURRENT_SOURCE_DIR}/DownloadScript.cmake"
     # Once we have it, copy it to the source tree to save download time.
-    COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_CURRENT_BINARY_DIR}/${FN}" "${CMAKE_CURRENT_SOURCE_DIR}/${FN2}"
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_CURRENT_BINARY_DIR}/${FN}" "${CMAKE_CURRENT_SOURCE_DIR}/${FN}"
     DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/DownloadScript.cmake"
     VERBATIM)
-add_custom_target(SDL2_Download DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/${FN2}")
+add_custom_target(SDL2_Download DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/${FN}")
 
 # Instructions at end of https://wiki.libsdl.org/Android indicate that this
 # is experimental but should work (toolchain is defined in the COMMON_CMAKE_ARGS).
 # @todo Why is it having a problem finding wchar_t?
+message(STATUS "Making SDL2 with SDL_SHARED=FALSE")
 ExternalProject_Add(SDL2
-    DEPENDS SDL2_Download
-    URL "${CMAKE_CURRENT_BINARY_DIR}/${FN2}"
+    URL "${CMAKE_CURRENT_BINARY_DIR}/${FN}"
     URL_HASH SHA1=${SHA1}
+    INSTALL_DIR "${ANDROID_INSTALL_DIR}"
+    UPDATE_COMMAND "${CMAKE_COMMAND}" -E copy "${CMAKE_CURRENT_SOURCE_DIR}/SDL_config.h.cmake.replacement" "${CMAKE_CURRENT_BINARY_DIR}/SDL2-prefix/src/SDL2/include/SDL_config.h.cmake"
+    DEPENDS SDL2_Download
     CMAKE_GENERATOR "${ANDROID_GENERATOR}"
     CMAKE_ARGS
     ${COMMON_CMAKE_ARGS}
-    -DCMAKE_VERBOSE_MAKEFILE=TRUE
-    #CONFIGURE_COMMAND ../SDL2/configure "--prefix=${ANDROID_INSTALL_DIR}" -host=arm-eabi
-    #BUILD_COMMAND make
-    #INSTALL_COMMAND make install
+    -DSDL_SHARED=FALSE
 )
 
 ###
