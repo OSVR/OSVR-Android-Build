@@ -166,6 +166,7 @@ macro(_osvr_android_update_common_cmake_args)
         "-DANDROID_ABI:STRING=${ANDROID_ABI}"
         "-DCMAKE_BUILD_TYPE=${ANDROID_BUILD_TYPE}"
         "-DANDROID_NATIVE_API_LEVEL:STRING=${ANDROID_NATIVE_API_LEVEL}"
+        "-DCMAKE_VERBOSE_MAKEFILE:BOOL=${CMAKE_VERBOSE_MAKEFILE}"
         ${ANDROID_COMMON_CMAKE_ARGS}
         )
 endmacro()
