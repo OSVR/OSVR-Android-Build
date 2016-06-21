@@ -27,30 +27,42 @@ if(BUILD_SERVER)
     ###
     set(HOST_PREFIX_PATH ${CMAKE_PREFIX_PATH})
 
-    ExternalProject_Add(jsoncpp_host
-        SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/jsoncpp"
-        CMAKE_ARGS
-        "-DCMAKE_INSTALL_PREFIX=${HOST_INSTALL_DIR}"
-        -DJSONCPP_WITH_CMAKE_PACKAGE=ON
-        -DJSONCPP_LIB_BUILD_SHARED=OFF
-        -DJSONCPP_WITH_TESTS=OFF
-        -DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF
-        "-DCMAKE_PREFIX_PATH=${HOST_PREFIX_PATH}"
-        BUILD_IN_SOURCE 0)
-    add_ep_to_force(jsoncpp_host)
-    list(APPEND HOST_PREFIX_PATH "${HOST_INSTALL_DIR}")
+    if(TARGET osvr::osvr_json_to_c)
+        message(STATUS "Using host osvr_json_to_c from build at ${osvr_DIR}")
+        set(OSVR_JSON_TO_C_COMMAND $<TARGET_FILE:osvr::osvr_json_to_c>)
+        # dummy target
+        add_custom_target(osvr_json_to_c_host)
+    elseif(OSVR_JSON_TO_C_COMMAND AND EXISTS "${OSVR_JSON_TO_C_COMMAND}")
+        message(STATUS "Using specified host osvr_json_to_c ${OSVR_JSON_TO_C_COMMAND}")
+        # dummy target
+        add_custom_target(osvr_json_to_c_host)
+    else()
+        # need to build it ourselves
+        ExternalProject_Add(jsoncpp_host
+            SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/jsoncpp"
+            CMAKE_ARGS
+            "-DCMAKE_INSTALL_PREFIX=${HOST_INSTALL_DIR}"
+            -DJSONCPP_WITH_CMAKE_PACKAGE=ON
+            -DJSONCPP_LIB_BUILD_SHARED=OFF
+            -DJSONCPP_WITH_TESTS=OFF
+            -DJSONCPP_WITH_POST_BUILD_UNITTEST=OFF
+            "-DCMAKE_PREFIX_PATH=${HOST_PREFIX_PATH}"
+            BUILD_IN_SOURCE 0)
+        add_ep_to_force(jsoncpp_host)
+        list(APPEND HOST_PREFIX_PATH "${HOST_INSTALL_DIR}")
 
-    ExternalProject_Add(osvr_json_to_c_host
-        DEPENDS jsoncpp_host
-        SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/osvr_json_to_c"
-        CMAKE_ARGS
-        "-DCMAKE_INSTALL_PREFIX=${HOST_INSTALL_DIR}"
-        "-DCMAKE_PREFIX_PATH=${HOST_PREFIX_PATH}"
-        "-DOSVR_CORE_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core")
+        ExternalProject_Add(osvr_json_to_c_host
+            DEPENDS jsoncpp_host
+            SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/osvr_json_to_c"
+            CMAKE_ARGS
+            "-DCMAKE_INSTALL_PREFIX=${HOST_INSTALL_DIR}"
+            "-DCMAKE_PREFIX_PATH=${HOST_PREFIX_PATH}"
+            "-DOSVR_CORE_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core")
 
-    set(OSVR_JSON_TO_C_COMMAND "${HOST_INSTALL_DIR}/bin/osvr_json_to_c")
-    list(APPEND osvr_dep_targets osvr_json_to_c_host)
-    add_ep_to_force(osvr_json_to_c_host)
+        set(OSVR_JSON_TO_C_COMMAND "${HOST_INSTALL_DIR}/bin/osvr_json_to_c")
+        list(APPEND osvr_dep_targets osvr_json_to_c_host)
+        add_ep_to_force(osvr_json_to_c_host)
+    endif()
 endif()
 
 ###
@@ -199,7 +211,7 @@ if(BUILD_SERVER_PLUGINS)
         CMAKE_ARGS
         ${COMMON_CMAKE_ARGS}
         BUILD_IN_SOURCE 0)
-    add_ep_to_force(jniImaging)      
+    add_ep_to_force(jniImaging)
 endif()
 
 # Add the custom target to delete the build stamps

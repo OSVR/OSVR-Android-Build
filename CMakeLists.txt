@@ -31,6 +31,14 @@ if(NOT ANDROID_NATIVE_API_LEVEL)
     set(ANDROID_NATIVE_API_LEVEL "16" CACHE STRING "Android Native API Level")
 endif()
 
+# Optional, externally-built osvr_json_to_c instance
+
+set(CMAKE_MAP_IMPORTED_CONFIG_RELEASE RELWITHDEBINFO)
+find_package(osvr)
+unset(CMAKE_MAP_IMPORTED_CONFIG_RELEASE)
+if(NOT TARGET osvr::osvr_json_to_c)
+    find_program(OSVR_JSON_TO_C_COMMAND NAMES osvr_json_to_c)
+endif()
 
 if(WIN32)
     set(MAKEFILE_GENERATOR "MinGW Makefiles")
