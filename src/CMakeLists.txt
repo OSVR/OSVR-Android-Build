@@ -151,7 +151,7 @@ if(BUILD_SERVER)
         SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libfunctionality"
         INSTALL_DIR "${ANDROID_INSTALL_DIR}"
         CMAKE_GENERATOR "${ANDROID_GENERATOR}"
-        CMAKE_ARGS ${COMMON_CMAKE_ARGS} # put any others here
+        CMAKE_ARGS ${COMMON_CMAKE_ARGS} -DBUILD_TESTING=OFF # put any others here
         BUILD_IN_SOURCE 0)
     list(APPEND osvr_dep_targets libfunctionality)
     add_ep_to_force(libfunctionality)
