@@ -196,6 +196,7 @@ if("${ANDROID_GENERATOR}" STREQUAL "MinGW Makefiles")
         NAMES
         make.exe
         make
+        mingw32-make
         HINTS
         ${ANDROID_NDK}/prebuilt/windows-x86_64/bin)
     if(NOT ANDROID_NDK_MAKE)
