@@ -70,7 +70,8 @@ list(APPEND OSVR_CORE_PASSTHROUGH_OPTIONS "-DOSVR_COMMON_IN_PROCESS_IMAGING=1")
 # NDK finding - using environment and CMake variables as a hint
 ###
 if(NOT ANDROID_NDK)
-    set(ANDROID_NDK $ENV{ANDROID_NDK} CACHE PATH "The root directory of an Android NDK")
+    get_filename_component(ANDROID_NDK "$ENV{ANDROID_NDK}" ABSOLUTE)
+    set(ANDROID_NDK "${ANDROID_NDK}" CACHE PATH "The root directory of an Android NDK" FORCE)
 endif()
 
 if(ANDROID_NDK)
