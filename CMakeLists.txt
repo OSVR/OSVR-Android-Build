@@ -24,11 +24,11 @@ if(NOT ANDROID_STL)
     set(ANDROID_STL gnustl_shared)
 endif()
 
-# if(NOT ANDROID_TOOLCHAIN_NAME)
-#     set(ANDROID_TOOLCHAIN_NAME "arm-linux-androideabi-4.9" CACHE STRING "Android Toolchain name")
-#     set_property(CACHE ANDROID_TOOLCHAIN_NAME PROPERTY STRINGS "arm-linux-androideabi-4.9")
-# endif()
-#
+if(NOT ANDROID_TOOLCHAIN_NAME AND ANDROID_ABI MATCHES "armeabi")
+    set(ANDROID_TOOLCHAIN_NAME "arm-linux-androideabi-4.9" CACHE STRING "Android Toolchain name")
+    set_property(CACHE ANDROID_TOOLCHAIN_NAME PROPERTY STRINGS "arm-linux-androideabi-4.9" "arm-linux-androideabi-clang3.7" "arm-linux-androideabi-clang3.6")
+endif()
+
 if(NOT ANDROID_NATIVE_API_LEVEL)
     set(ANDROID_NATIVE_API_LEVEL "16" CACHE STRING "Android Native API Level")
 endif()
@@ -149,7 +149,7 @@ endif()
 
 set(ANDROID_NDK_BUILD_WITH_ARGS
     "${ANDROID_NDK_BUILD}"
-    #NDK_TOOLCHAIN=${ANDROID_TOOLCHAIN_NAME}
+    NDK_TOOLCHAIN=${ANDROID_TOOLCHAIN_NAME}
     APP_ABI=${ANDROID_ABI}
     "NDK_OUT=<BINARY_DIR>"
     "NDK_APP_DST_DIR=<INSTALL_DIR>/lib"
@@ -189,6 +189,14 @@ endmacro()
 
 # Initial run to generate COMMON_CMAKE_ARGS, only have one entry for the prefix path
 osvr_android_add_to_common_prefix_path("${ANDROID_INSTALL_DIR}")
+
+
+if(ANDROID_TOOLCHAIN_NAME)
+    message(STATUS "Using toolchain ${ANDROID_TOOLCHAIN_NAME}")
+    list(APPEND ANDROID_NDK_BUILD_WITH_ARGS
+        "NDK_TOOLCHAIN=${ANDROID_TOOLCHAIN_NAME}")
+    osvr_android_add_common_cmake_arg("-DANDROID_TOOLCHAIN_NAME:STRING=${ANDROID_TOOLCHAIN_NAME}")
+endif()
 
 ###
 # Find/use make/ninja
