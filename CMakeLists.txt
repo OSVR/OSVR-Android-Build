@@ -20,7 +20,9 @@ endif()
 #set(ANDROID_STL gnustl_static)
 
 # well, except this one seems to work fine
-set(ANDROID_STL gnustl_shared)
+if(NOT ANDROID_STL)
+    set(ANDROID_STL gnustl_shared)
+endif()
 
 # if(NOT ANDROID_TOOLCHAIN_NAME)
 #     set(ANDROID_TOOLCHAIN_NAME "arm-linux-androideabi-4.9" CACHE STRING "Android Toolchain name")
