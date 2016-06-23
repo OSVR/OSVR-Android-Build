@@ -198,6 +198,18 @@ if(ANDROID_TOOLCHAIN_NAME)
     osvr_android_add_common_cmake_arg("-DANDROID_TOOLCHAIN_NAME:STRING=${ANDROID_TOOLCHAIN_NAME}")
 endif()
 
+if("${ANDROID_STL}" MATCHES "c\\+\\+_")
+
+    if(NOT ANDROID_LIBCXX_VERSION AND NOT ("${ANDROID_TOOLCHAIN_NAME}" MATCHES "clang") AND NOT ("${ANDROID_TOOLCHAIN_NAME}" MATCHES "clang"))
+        message(STATUS "Specified a GCC toolchain with libc++ - setting a default ANDROID_LIBCXX_VERSION for you.")
+        set(ANDROID_LIBCXX_VERSION 3.7)
+    endif()
+    if(ANDROID_LIBCXX_VERSION)
+        message(STATUS "Passing ANDROID_LIBCXX_VERSION=${ANDROID_LIBCXX_VERSION}")
+        osvr_android_add_common_cmake_arg("-DANDROID_LIBCXX_VERSION:STRING=${ANDROID_LIBCXX_VERSION}")
+    endif()
+endif()
+
 ###
 # Find/use make/ninja
 ###
