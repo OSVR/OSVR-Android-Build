@@ -1,18 +1,18 @@
-#!/system/bin/sh
+#!/system/bin/sh -x
 root=$(cd $(dirname $0) && pwd)
 launcher=${root}/bin/launcher.sh
-
+TOOLBOX=$(which toolbox)
 if which chmod > /dev/null; then
-    $CHMOD=chmod
+    CHMOD=$(which chmod)
 else
-    $CHMOD=toolbox chmod
+    CHMOD="${TOOLBOX} chmod"
 fi
 
 
 if which ln > /dev/null; then
-    $LN=ln
+    LN=$(which ln)
 else
-    $LN=toolbox ln
+    LN="${TOOLBOX} ln"
 fi
 
 make_executable() {
