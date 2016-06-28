@@ -33,10 +33,10 @@
 #define NO_MALLINFO 1
 #define HAVE_USR_INCLUDE_MALLOC_H
 #define ONLY_MSPACES 1
-#define HAVE_MALLOC
-#define HAVE_STDINT_H
 #define __android_log_print(...) 
-#define __android_log_write(...) 
+#define __android_log_write(...)
+#define GL_GLEXT_PROTOTYPES
+ 
 /*
  * End OSVR-Android-Build addition
 ************************/
