@@ -113,9 +113,9 @@ add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${FN}"
     "-DLOCAL_LOCATION=${CMAKE_CURRENT_BINARY_DIR}/${FN}"
     "-DSHA1=${SHA1}"
     "-DURL=http://www.libsdl.org/release/${FN}"
+    "-DANDROID_FORCE_ARM_BUILD=ON"
     -P "${CMAKE_CURRENT_SOURCE_DIR}/DownloadScript.cmake"
     # Once we have it, copy it to the source tree to save download time.
-    COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_CURRENT_BINARY_DIR}/${FN}" "${CMAKE_CURRENT_SOURCE_DIR}/${FN}"
     DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/DownloadScript.cmake"
     VERBATIM)
 add_custom_target(SDL2_Download DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/${FN}")
@@ -224,6 +224,7 @@ ExternalProject_Add(OSVR-Core
     "-DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}" # Have to pass in "host" python TODO is this actually needed?
     "-DLIBUSB1_LIBRARY=${ANDROID_INSTALL_DIR}/lib/libusb1.0.so" # TODO cmake should be able to find this for us.
     "-DVRPN_HIDAPI_SOURCE_ROOT=${CMAKE_CURRENT_SOURCE_DIR}/hidapi" # Let VRPN build HIDAPI for us.
+    "-DBUILD_HEADER_DEPENDENCY_TESTS=OFF"
     ${OSVR_CORE_PASSTHROUGH_OPTIONS}
     BUILD_IN_SOURCE 0)
 add_ep_to_force(OSVR-Core)
