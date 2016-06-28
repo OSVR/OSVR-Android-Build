@@ -128,7 +128,6 @@ ExternalProject_Add(SDL2
     URL "${CMAKE_CURRENT_BINARY_DIR}/${FN}"
     URL_HASH SHA1=${SHA1}
     INSTALL_DIR "${ANDROID_INSTALL_DIR}"
-    UPDATE_COMMAND "${CMAKE_COMMAND}" -E copy "${CMAKE_CURRENT_SOURCE_DIR}/SDL_config.h.cmake.replacement" "${CMAKE_CURRENT_BINARY_DIR}/SDL2-prefix/src/SDL2/include/SDL_config.h.cmake"
     DEPENDS SDL2_Download
     CMAKE_GENERATOR "${ANDROID_GENERATOR}"
     CMAKE_ARGS
