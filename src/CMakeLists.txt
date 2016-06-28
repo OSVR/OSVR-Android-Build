@@ -133,6 +133,7 @@ ExternalProject_Add(SDL2
     CMAKE_ARGS
     ${COMMON_CMAKE_ARGS}
     -DSDL_SHARED=FALSE
+    -C ${CMAKE_CURRENT_SOURCE_DIR}/SDL-add-ons.cmake
 )
 
 ###
