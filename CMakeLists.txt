@@ -15,6 +15,13 @@ if(NOT ANDROID_ABI)
     set_property(CACHE ANDROID_ABI PROPERTY STRINGS "armeabi" "armeabi-v7a" "armeabi-v7a with NEON" "armeabi-v7a with VFPV3" "armeabi-v6 with VFP" "x86" "mips" "arm64-v8a" "x86_64" "mips64")
 endif()
 
+# ndk-build doesn't like decorated ABI strings.
+if("${ANDROID_ABI}" MATCHES "armeabi-v7a" AND NOT "${ANDROID_ABI}" STREQUAL "armeabi-v7a")
+    set(ANDROID_BARE_NDK_ABI "armeabi-v7a")
+else()
+    set(ANDROID_BARE_NDK_ABI "${ANDROID_ABI}")
+endif()
+
 # This is the only one that supports rtti and exceptions,
 # except for libc++ which isn't supported by android-cmake yet.
 #set(ANDROID_STL gnustl_static)
@@ -150,7 +157,7 @@ endif()
 set(ANDROID_NDK_BUILD_WITH_ARGS
     "${ANDROID_NDK_BUILD}"
     NDK_TOOLCHAIN=${ANDROID_TOOLCHAIN_NAME}
-    APP_ABI=${ANDROID_ABI}
+    APP_ABI=${ANDROID_BARE_NDK_ABI}
     "NDK_OUT=<BINARY_DIR>"
     "NDK_APP_DST_DIR=<INSTALL_DIR>/lib"
     )
