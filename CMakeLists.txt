@@ -217,6 +217,11 @@ if("${ANDROID_STL}" MATCHES "c\\+\\+_")
     endif()
 endif()
 
+if(ANDROID_EXTRA_CXX_FLAGS)
+    message(STATUS "Passing along ANDROID_EXTRA_CXX_FLAGS=${ANDROID_EXTRA_CXX_FLAGS} as CMAKE_CXX_FLAGS")
+    osvr_android_add_common_cmake_arg("-DCMAKE_CXX_FLAGS:STRING=${ANDROID_EXTRA_CXX_FLAGS}")
+endif()
+
 ###
 # Find/use make/ninja
 ###
