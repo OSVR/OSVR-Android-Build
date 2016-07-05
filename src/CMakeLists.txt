@@ -224,7 +224,6 @@ ExternalProject_Add(OSVR-Core
     "-DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}" # Have to pass in "host" python TODO is this actually needed?
     "-DLIBUSB1_LIBRARY=${ANDROID_INSTALL_DIR}/lib/libusb1.0.so" # TODO cmake should be able to find this for us.
     "-DVRPN_HIDAPI_SOURCE_ROOT=${CMAKE_CURRENT_SOURCE_DIR}/hidapi" # Let VRPN build HIDAPI for us.
-    "-DBUILD_HEADER_DEPENDENCY_TESTS=OFF"
     ${OSVR_CORE_PASSTHROUGH_OPTIONS}
     BUILD_IN_SOURCE 0)
 add_ep_to_force(OSVR-Core)
@@ -236,7 +235,7 @@ ExternalProject_Add(OSVR-RenderManager
     CMAKE_GENERATOR "${ANDROID_GENERATOR}"
     CMAKE_ARGS
     ${COMMON_CMAKE_ARGS}
-    "-DEIGEN3_INCLUDE_DIR:PATH=${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core/vendor/eigen-3.2.7"
+    "-DEIGEN3_INCLUDE_DIR:PATH=${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core/vendor/eigen"
     "-DVRPN_INCLUDE_DIR:PATH=${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core/vendor/vrpn"
     "-DVRPN_LIBRARY:PATH=${CMAKE_CURRENT_BINARY_DIR}/OSVR-Core-prefix/src/OSVR-Core-build/bin/libvrpnserver.a"
     "-DQUATLIB_INCLUDE_DIR:PATH=${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core/vendor/vrpn/quat"
