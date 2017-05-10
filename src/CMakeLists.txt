@@ -103,38 +103,38 @@ ExternalProject_Get_Property(OpenCV SOURCE_DIR)
 set(OpenCV_DIR "${SOURCE_DIR}/sdk/native/jni")
 
 # SDL 2.0 has a source zip file for Android.
-set(SHA1 00b2abe02de0ab1c9565955d56e6ac66bd342c07)
-set(FN SDL2-2.0.4.zip)
+#set(SHA1 00b2abe02de0ab1c9565955d56e6ac66bd342c07)
+#set(FN SDL2-2.0.4.zip)
 # Use our own script to download, since ExternalProject re-downloads too often.
-add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${FN}"
-    # Downlaod the file if we need it.
-    COMMAND "${CMAKE_COMMAND}"
-    "-DEXTERNAL_LOCATION=${CMAKE_CURRENT_SOURCE_DIR}/${FN}"
-    "-DLOCAL_LOCATION=${CMAKE_CURRENT_BINARY_DIR}/${FN}"
-    "-DSHA1=${SHA1}"
-    "-DURL=http://www.libsdl.org/release/${FN}"
-    "-DANDROID_FORCE_ARM_BUILD=ON"
-    -P "${CMAKE_CURRENT_SOURCE_DIR}/DownloadScript.cmake"
-    # Once we have it, copy it to the source tree to save download time.
-    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/DownloadScript.cmake"
-    VERBATIM)
-add_custom_target(SDL2_Download DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/${FN}")
+#add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${FN}"
+#    # Downlaod the file if we need it.
+#    COMMAND "${CMAKE_COMMAND}"
+#    "-DEXTERNAL_LOCATION=${CMAKE_CURRENT_SOURCE_DIR}/${FN}"
+#    "-DLOCAL_LOCATION=${CMAKE_CURRENT_BINARY_DIR}/${FN}"
+#    "-DSHA1=${SHA1}"
+#    "-DURL=http://www.libsdl.org/release/${FN}"
+#    "-DANDROID_FORCE_ARM_BUILD=ON"
+#    -P "${CMAKE_CURRENT_SOURCE_DIR}/DownloadScript.cmake"
+#    # Once we have it, copy it to the source tree to save download time.
+#    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/DownloadScript.cmake"
+#    VERBATIM)
+# add_custom_target(SDL2_Download DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/${FN}")
 
 # Instructions at end of https://wiki.libsdl.org/Android indicate that this
 # is experimental but should work (toolchain is defined in the COMMON_CMAKE_ARGS).
 # @todo Why is it having a problem finding wchar_t?
-message(STATUS "Making SDL2 with SDL_SHARED=FALSE")
-ExternalProject_Add(SDL2
-    URL "${CMAKE_CURRENT_BINARY_DIR}/${FN}"
-    URL_HASH SHA1=${SHA1}
-    INSTALL_DIR "${ANDROID_INSTALL_DIR}"
-    DEPENDS SDL2_Download
-    CMAKE_GENERATOR "${ANDROID_GENERATOR}"
-    CMAKE_ARGS
-    ${COMMON_CMAKE_ARGS}
-    -DSDL_SHARED=FALSE
-    -C ${CMAKE_CURRENT_SOURCE_DIR}/SDL-add-ons.cmake
-)
+#message(STATUS "Making SDL2 with SDL_SHARED=FALSE")
+#ExternalProject_Add(SDL2
+#    URL "${CMAKE_CURRENT_BINARY_DIR}/${FN}"
+#    URL_HASH SHA1=${SHA1}
+#    INSTALL_DIR "${ANDROID_INSTALL_DIR}"
+#    DEPENDS SDL2_Download
+#    CMAKE_GENERATOR "${ANDROID_GENERATOR}"
+#    CMAKE_ARGS
+#    ${COMMON_CMAKE_ARGS}
+#    -DSDL_SHARED=FALSE
+#    -C ${CMAKE_CURRENT_SOURCE_DIR}/SDL-add-ons.cmake
+#)
 
 ###
 # Conditionally build Boost
@@ -231,7 +231,7 @@ add_ep_to_force(OSVR-Core)
 ExternalProject_Add(OSVR-RenderManager
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/OSVR-RenderManager"
     INSTALL_DIR "${ANDROID_INSTALL_DIR}"
-    DEPENDS OSVR-Core SDL2
+    DEPENDS OSVR-Core #SDL2
     CMAKE_GENERATOR "${ANDROID_GENERATOR}"
     CMAKE_ARGS
     ${COMMON_CMAKE_ARGS}
