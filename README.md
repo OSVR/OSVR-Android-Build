@@ -11,7 +11,7 @@ in the root directory. (You may want to do the latter after updating this repo, 
 
 ## Requirements
 - The latest [CMake][] (3.2.2 verified to work 22-May-2015)
-- The latest [CrystaX NDK][] (10.1.0 verified to work 22-May-2015)
+- The latest [CrystaX NDK][] (10.3.2 verified to work 05-May-2017)
   - There is some code to theoretically support the upstream Android NDK, but it does not work at this time and is not recommended unless you want to help hack on the build system. Anyway, the CrystaX NDK appears to provide other benefits besides reducing dependencies (it comes with Boost already compiled), so it will most likely remain the targeted NDK.
 - Python 2.x (often - always? - included in an NDK)
 - Boost installed on your system for your host compiler (not the android compiler) - specifically we need Boost.ProgramOptions.
