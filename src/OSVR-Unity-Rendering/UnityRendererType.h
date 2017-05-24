@@ -62,6 +62,9 @@ public:
 			"Expect to only set renderer when it's null!");
 		switch (gfxRenderer) {
 #if SUPPORT_OPENGL
+		case kUnityGfxRendererOpenGL: // Desktop OpenGL 2 (deprecated)
+		case kUnityGfxRendererOpenGLES20:
+		case kUnityGfxRendererOpenGLES30:
 		case kUnityGfxRendererOpenGLCore:
 			renderer_ = OSVRSupportedRenderers::OpenGL;
 			supported_ = true;
@@ -73,13 +76,10 @@ public:
 			supported_ = true;
 			break;
 #endif
-		case kUnityGfxRendererOpenGL: // Desktop OpenGL 2 (deprecated)
 		case kUnityGfxRendererD3D9:
 		case kUnityGfxRendererGCM:
 		case kUnityGfxRendererNull:
 		case kUnityGfxRendererXenon:
-		case kUnityGfxRendererOpenGLES20:
-		case kUnityGfxRendererOpenGLES30:
 		case kUnityGfxRendererGXM:
 		case kUnityGfxRendererPS4:
 		case kUnityGfxRendererXboxOne:

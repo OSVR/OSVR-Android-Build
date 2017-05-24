@@ -75,6 +75,9 @@ Sensics, Inc.
 
 #elif UNITY_LINUX
 #include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#include <jni.h>
+
 #elif UNITY_OSX
 // Mac OpenGL include
 #include <OpenGL/OpenGL.h>
@@ -200,12 +203,6 @@ void UNITY_INTERFACE_API ShutdownRenderManager() {
 	}
 	s_clientContext = nullptr;
 
-}
-
-jint JNI_OnLoad(JavaVM* vm, void* reserved) {
-  JNIEnv* jni_env = 0;
-  vm->AttachCurrentThread(&jni_env, 0);
-  return JNI_VERSION_1_7;
 }
 
 
@@ -456,37 +453,6 @@ inline void UpdateRenderInfo() {
     s_renderInfo = s_render->GetRenderInfo(s_renderParams);
 }
 
-#if 0
-extern "C" bool UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API
-UpdateDistortionMesh(float distanceScale[2], float centerOfProjection[2],
-                     float *polynomial, int desiredTriangles = 12800) {
-    std::vector<osvr::renderkit::RenderManager::DistortionParameters> dp;
-    osvr::renderkit::RenderManager::DistortionParameters distortion;
-    distortion.m_desiredTriangles = desiredTriangles;
-    std::vector<float> Ds;
-    Ds.push_back(distanceScale[0]);
-    Ds.push_back(distanceScale[1]);
-    distortion.m_distortionD = Ds;
-    std::vector<float> poly;
-    int len = sizeof(polynomial) / sizeof(int);
-    for (size_t i = 0; i < len; i++) {
-        poly.push_back(polynomial[i]);
-    }
-    // assume each color is the same for now
-    distortion.m_distortionPolynomialRed = poly;
-    distortion.m_distortionPolynomialGreen = poly;
-    distortion.m_distortionPolynomialBlue = poly;
-    for (size_t i = 0; i < s_renderInfo.size(); i++) {
-        std::vector<float> COP = {static_cast<float>(centerOfProjection[0]),
-                                  static_cast<float>(centerOfProjection[1])};
-        distortion.m_distortionCOP = COP;
-        dp.push_back(distortion);
-    }
-    return s_render->UpdateDistortionMeshes(
-        osvr::renderkit::RenderManager::DistortionMeshType::SQUARE, dp);
-}
-
-#endif
 
 // Updates the internal "room to world" transformation (applied to all
 // tracker data for this client context instance) based on the user's head
@@ -522,12 +488,82 @@ bool SetupRendering(osvr::renderkit::GraphicsLibrary library) {
 	return true;
 }
 
+static JNIEnv* jniEnvironment = 0;
+static int init = 0;
+jint JNI_OnLoad(JavaVM* vm, void* reserved) {
+    jniEnvironment = 0;
+    vm->AttachCurrentThread(&jniEnvironment, 0);
+	//init = 100;
+	//this OnLoad definitely gets called on the Unity path
+  return JNI_VERSION_1_6;
+}
+
+static jclass unityActivityClass;
+static jmethodID unityActivityClassConstructorID;
+static jmethodID logMsgId;
+static jobject unityActivityClassInstance;
+void createJavaActivityClassObject(JNIEnv* jni_env) {
+  unityActivityClass = jni_env->FindClass("org/osvr/osvrunityandroid/MainActivity");         // find class definition
+  unityActivityClassConstructorID = jni_env->GetMethodID(unityActivityClass, "<init>", "()V");      // find constructor method
+  logMsgId = jni_env->GetMethodID(unityActivityClass, "logMsg", "(Ljava/lang/String;)V");
+  unityActivityClassInstance = jni_env->NewGlobalRef(jni_env->NewObject(unityActivityClass, unityActivityClassConstructorID));                    
+}
+
+/*jstring Java_the_package_MainActivity_getJniString( JNIEnv* env, jobject obj){
+
+    jstring jstr = (*env)->NewStringUTF(env, "This comes from jni.");
+    jclass clazz = (*env)->FindClass(env, "com/inceptix/android/t3d/MainActivity");
+    jmethodID messageMe = (*env)->GetMethodID(env, clazz, "messageMe", "(Ljava/lang/String;)Ljava/lang/String;");
+    jobject result = (*env)->CallObjectMethod(env, obj, messageMe, jstr);
+
+    const char* str = (*env)->GetStringUTFChars(env,(jstring) result, NULL); // should be released but what a heck, it's a tutorial :)
+    printf("%s\n", str);
+
+    return (*env)->NewStringUTF(env, str);
+}
+JNIEXPORT void JNICALL
+Java_Callbacks_nativeMethod(JNIEnv *env, jobject obj, jint depth)
+{
+	jclass cls = (*env)->GetObjectClass(env, obj);
+	jmethodID mid = (*env)->GetMethodID(env, cls, "callback", "(I)V");
+	if (mid == 0)
+		return;
+	printf("In C, depth = %d, about to enter Java\n", depth);
+	(*env)->CallVoidMethod(env, obj, mid, depth);
+	printf("In C, depth = %d, back from Java\n", depth);
+}
+*/
+
 
 // Called from Unity to create a RenderManager, passing in a ClientContext
 OSVR_ReturnCode UNITY_INTERFACE_API
 CreateRenderManagerFromUnity(OSVR_ClientContext context) {
-    DebugLog("[OSVR Rendering Plugin] we're in!");
-    std::cout << "AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH!!!!!" << std::endl;
+	jclass cls_JavaClass = jniEnvironment->FindClass("org/osvr/osvrunityandroid/MainActivity");         // find class definition
+	jmethodID mid_JavaClass = jniEnvironment->GetMethodID(cls_JavaClass, "<init>", "()V");      // find constructor method
+	jobject obj_JavaClass = jniEnvironment->NewObject(cls_JavaClass, mid_JavaClass);     // create object instance
+	jmethodID nativeFunctionId = jniEnvironment->GetStaticMethodID(cls_JavaClass, "nativeFunction", "()V");
+	jstring jstr = jniEnvironment->NewStringUTF("This string comes from JNI");
+	jniEnvironment->CallStaticVoidMethod(cls_JavaClass, nativeFunctionId);
+//	createJavaActivityClassObject(jniEnvironment);
+    // Construct a String
+    //jstring jstr = jniEnvironment->NewStringUTF("This string comes from JNI");
+	//jniEnvironment->CallVoidMethod(unityActivityClassInstance, logMsgId, jstr);
+   // jniEnvironment->ReleaseStringUTFChars(jstr);
+  // unityActivityClass = jniEnvironment->FindClass("org/osvr/osvrunityandroid/MainActivity"); 
+
+//Java_orgs_osvr_osvrunityandroid_MainActivity_nativeMethod(jniEnvironment, javaObj, 0);
+  //  DebugLog("[OSVR Rendering Plugin] we're in!");
+	//LOGI("[OSVR Rendering Plugin] we're in!");
+	//std::string cstr = "[OSVR Android Plugin] " + std::to_string(init);
+	//DebugLog("[OSVR Rendering Plugin] we're in!");
+	//DebugLog(cstr.c_str());
+	//printf(cstr.c_str());
+	/*jstring js = jniEnvironment->NewStringUTF("howdy");
+	jclass javaClass = jniEnvironment->GetObjectClass(javaObj);
+	jmethodID method = jniEnvironment->GetMethodID(javaClass, "logMsg", "(Ljava/lang/String;)V");
+	jniEnvironment->CallVoidMethod(javaObj, method, js);*/
+
+
     /// See if we're already created/running - shouldn't happen, but might.
     if (s_render != nullptr) {
         if (s_render->doingOkay()) {
@@ -590,14 +626,16 @@ CreateRenderManagerFromUnity(OSVR_ClientContext context) {
 
 #if SUPPORT_OPENGL
     case OSVRSupportedRenderers::OpenGL:
-		
 		//InitSDLGL();
 		//shareContext();
 
         s_render = osvr::renderkit::createRenderManager(context, "OpenGL");
        // setLibraryFromOpenDisplayReturn = true;
         break;
+		
 #endif // SUPPORT_OPENGL
+	default:
+		break;
     }
 
     if ((s_render == nullptr) || (!s_render->doingOkay())) {
