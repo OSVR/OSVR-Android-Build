@@ -560,7 +560,7 @@ static bool setupRenderTextures(OSVR_RenderManager renderManager) {
 			glBindFramebuffer(GL_FRAMEBUFFER, gFrameBuffer);
 
 			OSVR_RenderBufferOpenGL buffer = { 0 };
-			buffer.colorBufferName = GetEyeTextureOpenGL(i);
+			buffer.colorBufferName = colorBufferName;
 			buffer.depthStencilBufferName = depthBuffer;
 			rc = osvrRenderManagerRegisterRenderBufferOpenGL(state, buffer);
 			checkReturnCode(rc, "osvrRenderManagerRegisterRenderBufferOpenGL call failed.");
@@ -1056,7 +1056,6 @@ static void renderFrame() {
 			// unbind the render target
 			glBindFramebuffer(GL_FRAMEBUFFER, gFrameBuffer);
 */
-                        glBindFramebuffer(GL_FRAMEBUFFER, gFrameBuffer);
 
 			// present this render target (deferred until the finish call below)
 			OSVR_ViewportDescription normalizedViewport = { 0 };
@@ -1065,7 +1064,7 @@ static void renderFrame() {
 			normalizedViewport.width = 1.0f;
 			normalizedViewport.height = 1.0f;
 			OSVR_RenderBufferOpenGL buffer = { 0 };
-			buffer.colorBufferName = renderTargetInfo.colorBufferName;
+			buffer.colorBufferName = GetEyeTextureOpenGL(renderInfoCount);
 			buffer.depthStencilBufferName = renderTargetInfo.depthBufferName;
 
 
