@@ -55,12 +55,6 @@ static IUnityInterfaces *s_UnityInterfaces = nullptr;
 static IUnityGraphics *s_Graphics = nullptr;
 static UnityRendererType s_deviceType;
 
-//static osvr::renderkit::RenderManager::RenderParams s_renderParams;
-//static osvr::renderkit::RenderManager *s_render = nullptr;
-//static OSVR_ClientContext s_clientContext = nullptr;
-//static std::vector<osvr::renderkit::RenderBuffer> s_renderBuffers;
-//static std::vector<osvr::renderkit::RenderInfo> s_renderInfo;
-//static osvr::renderkit::GraphicsLibrary s_library;
 
 /// @todo is this redundant? (given renderParams)
 static double s_nearClipDistance = 0.1;
@@ -933,24 +927,13 @@ static void renderFrame() {
 	}
 
 	OSVR_ReturnCode rc;
-	//glUseProgram(gProgram);
-	//glBindFramebuffer(GL_FRAMEBUFFER, gFrameBuffer);
 
-	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	checkGlError("glClearColor");
 	glViewport(0, 0, gWidth, gHeight);
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	checkGlError("glClear");
 
-/*	GLint maxVertexAttribs;
-	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxVertexAttribs);
-
-	for (GLuint i = 0; i < maxVertexAttribs; i++) {
-		glDisableVertexAttribArray(static_cast<GLuint>(i));
-	}
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);*/
-	//bindVertexArrayOES(0);
 
 	if (gRenderManager && gClientContext) {
 		osvrClientUpdate(gClientContext);
@@ -977,85 +960,8 @@ static void renderFrame() {
 
 			// get the current render info
 			OSVR_RenderInfoOpenGL currentRenderInfo = renderInfoCollection.getRenderInfo(renderInfoCount);
-// Set color and depth buffers for the frame buffer
+            // Set color and depth buffers for the frame buffer
             OSVR_RenderTargetInfo renderTargetInfo = gRenderTargets[renderInfoCount];
-
-			/// get the eye pose for the current render info
-			/*double viewMatd[OSVR_MATRIX_SIZE];
-			OSVR_PoseState_to_OpenGL(viewMatd, currentRenderInfo.pose);
-
-			// RenderManager's utilities only support doubles, but we need floats in ES2 land
-			GLfloat viewMat[OSVR_MATRIX_SIZE];
-			for (int i = 0; i < OSVR_MATRIX_SIZE; i++) {
-				viewMat[i] = static_cast<GLfloat>(viewMatd[i]);
-			}
-
-			// Set color and depth buffers for the frame buffer
-			OSVR_RenderTargetInfo renderTargetInfo = gRenderTargets[renderInfoCount];
-			glBindFramebuffer(GL_FRAMEBUFFER, renderTargetInfo.frameBufferName);
-
-			// @todo: convert to OpenGL?
-			glViewport(static_cast<GLint>(currentRenderInfo.viewport.left),
-				static_cast<GLint>(currentRenderInfo.viewport.lower),
-				static_cast<GLsizei>(currentRenderInfo.viewport.width),
-				static_cast<GLsizei>(currentRenderInfo.viewport.height));
-
-			//                glViewport(static_cast<GLint>(renderInfoCount == 0 ? 0 : currentRenderInfo.viewport.width),
-			//                           static_cast<GLint>(currentRenderInfo.viewport.lower),
-			//                           static_cast<GLsizei>(currentRenderInfo.viewport.width),
-			//                           static_cast<GLsizei>(currentRenderInfo.viewport.height));
-
-			/// Set the OpenGL projection matrix
-			double projMatd[OSVR_MATRIX_SIZE];
-			OSVR_Projection_to_OpenGL(projMatd, currentRenderInfo.projection);
-
-			// RenderManager's utilities only support doubles, but we need floats in GLES2 land
-			GLfloat projMat[OSVR_MATRIX_SIZE];
-			for (int i = 0; i < OSVR_MATRIX_SIZE; i++) {
-				projMat[i] = static_cast<GLfloat>(projMatd[i]);
-			}
-
-			const static GLfloat identityMat4f[16] = {
-				1.0f, 0.0f, 0.0f, 0.0f,
-				0.0f, 1.0f, 0.0f, 0.0f,
-				0.0f, 0.0f, 1.0f, 0.0f,
-				0.0f, 0.0f, 0.0f, 1.0f,
-			};
-
-			/// Call out to render our scene.
-			glUseProgram(gProgram);
-			checkGlError("glUseProgram");
-
-			glUniformMatrix4fv(gvProjectionUniformId, 1, GL_FALSE, projMat);
-			glUniformMatrix4fv(gvViewUniformId, 1, GL_FALSE, viewMat);
-			glUniformMatrix4fv(gvModelUniformId, 1, GL_FALSE, identityMat4f);
-			checkGlError("one of the glUniformMatrix4fv calls?");
-
-			glEnableVertexAttribArray(gvPositionHandle);
-			checkGlError("glEnableVertexAttribArray");
-			glVertexAttribPointer(gvPositionHandle, 3, GL_FLOAT, GL_FALSE, 0, gTriangleVertices);
-			checkGlError("glVertexAttribPointer");
-
-			glEnableVertexAttribArray(gvColorHandle);
-			checkGlError("glEnableVertexAttribArray");
-			glVertexAttribPointer(gvColorHandle, 4, GL_FLOAT, GL_FALSE, 0, gTriangleColors);
-			checkGlError("glVertexAttribPointer");
-
-			glEnableVertexAttribArray(gvTexCoordinateHandle);
-			checkGlError("glEnableVertexAttribArray");
-			glVertexAttribPointer(gvTexCoordinateHandle, 2, GL_FLOAT, GL_FALSE, 0, gTriangleTexCoordinates);
-			checkGlError("glVertexAttribPointer");
-
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, gTextureID);
-			glUniform1i(guTextureUniformId, 0);
-
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-			checkGlError("glDrawArrays");
-
-			// unbind the render target
-			glBindFramebuffer(GL_FRAMEBUFFER, gFrameBuffer);
-*/
 
 			// present this render target (deferred until the finish call below)
 			OSVR_ViewportDescription normalizedViewport = { 0 };
@@ -1066,11 +972,7 @@ static void renderFrame() {
 			OSVR_RenderBufferOpenGL buffer = { 0 };
 			buffer.colorBufferName = GetEyeTextureOpenGL(renderInfoCount);
 			buffer.depthStencilBufferName = renderTargetInfo.depthBufferName;
-
-
-
-
-            
+          
 			rc = osvrRenderManagerPresentRenderBufferOpenGL(
 				presentState, buffer, currentRenderInfo, normalizedViewport);
 			checkReturnCode(rc, "osvrRenderManagerPresentRenderBufferOpenGL call failed.");
@@ -1103,42 +1005,12 @@ static void stop() {
 }
 
 
-/*extern "C" {
-	JNIEXPORT void JNICALL Java_com_osvr_android_gles2sample_MainActivityJNILib_initGraphics(JNIEnv * env, jobject obj, jint width, jint height);
-	JNIEXPORT void JNICALL Java_com_osvr_android_gles2sample_MainActivityJNILib_initOSVR(JNIEnv *env, jobject obj);
-	JNIEXPORT void JNICALL Java_com_osvr_android_gles2sample_MainActivityJNILib_step(JNIEnv * env, jobject obj);
-	JNIEXPORT void JNICALL Java_com_osvr_android_gles2sample_MainActivityJNILib_stop(JNIEnv * env, jobject obj);
-};
-
-JNIEXPORT void JNICALL Java_com_osvr_android_gles2sample_MainActivityJNILib_initGraphics(JNIEnv * env, jobject obj, jint width, jint height)
-{
-	OSVROpenGL::setupGraphics(width, height);
-}
-
-JNIEXPORT void JNICALL Java_com_osvr_android_gles2sample_MainActivityJNILib_initOSVR(JNIEnv *env, jobject obj)
-{
-	OSVROpenGL::setupOSVR();
-}
-
-JNIEXPORT void JNICALL Java_com_osvr_android_gles2sample_MainActivityJNILib_step(JNIEnv * env, jobject obj)
-{
-	OSVROpenGL::renderFrame();
-}
-
-JNIEXPORT void JNICALL Java_com_osvr_android_gles2sample_MainActivityJNILib_stop(JNIEnv * env, jobject obj)
-{
-	OSVROpenGL::stop();
-}*/
-////////////////////////////////////////////////////////////////////////////////////////
-
-//JNI///////////////////////////////////////////
 static JNIEnv* jniEnvironment = 0;
-static int init = 0;
+    
+//this OnLoadd gets called automatically
 jint JNI_OnLoad(JavaVM* vm, void* reserved) {
     jniEnvironment = 0;
     vm->AttachCurrentThread(&jniEnvironment, 0);
-    //init = 100;
-    //this OnLoad definitely gets called on the Unity path
   return JNI_VERSION_1_6;
 }
 
@@ -1314,19 +1186,6 @@ bool InitSDLGL()
 		//DebugLog("RenderManagerOpenGL::addOpenGLContext: Could not get OpenGL context");
 		return false;
 	}
-
-	/*HDC myGLDC = wglGetCurrentDC();
-	std::string str = "InitSDLGL MyGL CONTEXT is " + std::to_string((int)myGLContext);
-	//DebugLog(str.c_str());
-	str = "InitSDLGL Current CONTEXT is " + std::to_string((int)myGLDC);
-	//DebugLog(str.c_str());
-	str = "InitSDLGL Current DC is " + std::to_string((int)wglGetCurrentDC());
-	//DebugLog(str.c_str());
-	//wglMakeCurrent(wglGetCurrentDC(), 0);
-	//str = "New Current CONTEXT is " + std::to_string((int)wglGetCurrentContext());
-	////DebugLog(str.c_str());
-	//shareContext();
-	return true;*/
 }
 #endif
 
@@ -1477,124 +1336,14 @@ void SetRoomRotationUsingHead() {/* s_render->SetRoomRotationUsingHead(); */}
 // manipulation of the room to world transform.
 /// @todo does this actually get called from anywhere or is it dead code?
 void ClearRoomToWorldTransform() { /*s_render->ClearRoomToWorldTransform();*/ }
-/*
-bool SetupRendering(osvr::renderkit::GraphicsLibrary library) {
-	// Make sure our pointers are filled in correctly.  The config file selects
-	// the graphics library to use, and may not match our needs.
-	if (library.OpenGL == nullptr) {
-		std::cerr << "SetupRendering: No OpenGL GraphicsLibrary, this should "
-			"not happen"
-			<< std::endl;
-		return false;
-	}
 
-	osvr::renderkit::GraphicsLibraryOpenGL* glLibrary = library.OpenGL;
-
-	// Turn on depth testing, so we get correct ordering.
-	//glEnable(GL_DEPTH_TEST);
-
-	return true;
-}*/
-
-
-
-/*jstring Java_the_package_MainActivity_getJniString( JNIEnv* env, jobject obj){
-
-    jstring jstr = (*env)->NewStringUTF(env, "This comes from jni.");
-    jclass clazz = (*env)->FindClass(env, "com/inceptix/android/t3d/MainActivity");
-    jmethodID messageMe = (*env)->GetMethodID(env, clazz, "messageMe", "(Ljava/lang/String;)Ljava/lang/String;");
-    jobject result = (*env)->CallObjectMethod(env, obj, messageMe, jstr);
-
-    const char* str = (*env)->GetStringUTFChars(env,(jstring) result, NULL); // should be released but what a heck, it's a tutorial :)
-    printf("%s\n", str);
-
-    return (*env)->NewStringUTF(env, str);
-}
-JNIEXPORT void JNICALL
-Java_Callbacks_nativeMethod(JNIEnv *env, jobject obj, jint depth)
-{
-	jclass cls = (*env)->GetObjectClass(env, obj);
-	jmethodID mid = (*env)->GetMethodID(env, cls, "callback", "(I)V");
-	if (mid == 0)
-		return;
-	printf("In C, depth = %d, about to enter Java\n", depth);
-	(*env)->CallVoidMethod(env, obj, mid, depth);
-	printf("In C, depth = %d, back from Java\n", depth);
-}
-*/
 
 
 // Called from Unity to create a RenderManager, passing in a ClientContext
 OSVR_ReturnCode UNITY_INTERFACE_API
 CreateRenderManagerFromUnity(OSVR_ClientContext context) {
     gClientContext = context;
-
-  //  mainActivityClass = jniEnvironment->FindClass("org/osvr/osvrunityandroid/MainActivity");  // try to find the class
-  /*  if(mainActivityClass == nullptr) {
-        return 5;
-    }
-    else {                                  // if class found, continue
-       // cout << "Class MyTest found" << endl;
-        jmethodID mid = jniEnvironment->GetStaticMethodID(mainActivityClass, "nativeFunction", "()V");  // find method
-        if(mid == nullptr)
-            //cerr << "ERROR: method void mymain() not found !" << endl;
-            return 6;
-        else {
-            jniEnvironment->CallStaticVoidMethod(mainActivityClass, mid);                      // call method
-            //cout << endl;
-        }
-
-        jmethodID logmid = jniEnvironment->GetStaticMethodID(mainActivityClass, "logMsg", "(Ljava/lang/String;)V");  // find method
-        if(logmid == nullptr)
-            //cerr << "ERROR: method void mymain() not found !" << endl;
-            return 7;
-        else {
-            if(contextSet)
-            {
-            std::string s("this is coming from lala land, context is set");
-             jstring jstr1 = jniEnvironment->NewStringUTF(s.c_str());
-            jniEnvironment->CallStaticVoidMethod(mainActivityClass, logmid, jstr1); 
-            }
-            else
-            {
-            std::string s("this is coming from lala land, context is NOT set");
-             jstring jstr1 = jniEnvironment->NewStringUTF(s.c_str());
-            jniEnvironment->CallStaticVoidMethod(mainActivityClass, logmid, jstr1); 
-            }
-                                 // call method
-        }
-
-        jmethodID getGlContextId = jniEnvironment->GetStaticMethodID(mainActivityClass, "getCurrentContext", "()J");  // find method
-         if(getGlContextId == nullptr)
-            //cerr << "ERROR: method void mymain() not found !" << endl;
-            return 8;
-        else {
-            
-            jlong currentEglContextHandle = jniEnvironment->CallStaticLongMethod(mainActivityClass, getGlContextId);                      // call method
-            long myLongValue = (long) currentEglContextHandle;
-            std::string stringy = "[OSVR-Unity-Android]  getCurrentContext with handle:  " + std::to_string(myLongValue);
-             jstring jstr2 = jniEnvironment->NewStringUTF(stringy.c_str());
-            jniEnvironment->CallStaticVoidMethod(mainActivityClass, logmid, jstr2);   
-            //cout << endl;
-        }
-
-        //create context
-        jmethodID createContextId = jniEnvironment->GetStaticMethodID(mainActivityClass, "createContext", "()J");  // find method
-
-         if(createContextId == nullptr)
-            //cerr << "ERROR: method void mymain() not found !" << endl;
-            return 8;
-        else {
-            
-            jlong newContextHandle = jniEnvironment->CallStaticLongMethod(mainActivityClass, createContextId);                      // call method
-            long myNewLongValue = (long) newContextHandle;
-            std::string stringyer = "[OSVR-Unity-Android] created context with handle: " + std::to_string(myNewLongValue);
-             jstring jstr3 = jniEnvironment->NewStringUTF(stringyer.c_str());
-            jniEnvironment->CallStaticVoidMethod(mainActivityClass, logmid, jstr3);   
-            //cout << endl;
-        }
-    }*/
-    if( setupOSVR())
+    if(setupOSVR())
     {
         if(setupGraphics(gWidth, gHeight))
         {
