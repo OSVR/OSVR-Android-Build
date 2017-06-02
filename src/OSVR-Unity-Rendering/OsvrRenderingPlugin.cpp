@@ -871,8 +871,8 @@ static bool setupGraphics(int width, int height) {
 	//LOGI("Window GL_FRAMEBUFFER_BINDING: %d", gFrameBuffer);
 
 	//LOGI("setupGraphics(%d, %d)", width, height);
-	gWidth = width;
-	gHeight = height;
+	//gWidth = width;
+	//gHeight = height;
 
 	//bool osvrSetupSuccess = setupOSVR();
 
@@ -1370,20 +1370,19 @@ mainActivityClass = jniEnvironment->FindClass("org/osvr/osvrunityandroid/MainAct
             //cout << endl;
         }
         //create context
-      /*  jmethodID createContextId = jniEnvironment->GetStaticMethodID(mainActivityClass, "createContext", "()J");  // find method
-
-         if(createContextId == nullptr)
+        jmethodID getWidthMID = jniEnvironment->GetStaticMethodID(mainActivityClass, "getDisplayWidth", "()I");  // find method
+        jmethodID getHeightMID = jniEnvironment->GetStaticMethodID(mainActivityClass, "getDisplayHeight", "()I");  // find method
+         if(getWidthMID == nullptr || getHeightMID == nullptr)
             //cerr << "ERROR: method void mymain() not found !" << endl;
             return;
         else {
             
-            jlong newContextHandle = jniEnvironment->CallStaticLongMethod(mainActivityClass, createContextId);                      // call method
-            long myNewLongValue = (long) newContextHandle;
-            std::string stringyer = "[OSVR-Unity-Android] created context with handle: " + std::to_string(myNewLongValue);
-             jstring jstr3 = jniEnvironment->NewStringUTF(stringyer.c_str());
-            jniEnvironment->CallStaticVoidMethod(mainActivityClass, logmid, jstr3);   
+            jint displayWidth = jniEnvironment->CallStaticIntMethod(mainActivityClass, getWidthMID); // call method
+            jint displayHeight = jniEnvironment->CallStaticIntMethod(mainActivityClass, getHeightMID); // call method
+            gWidth = (int)displayWidth;
+            gHeight = (int)displayHeight;
             //cout << endl;
-        }*/
+        }
     }
 
 #endif
@@ -1597,7 +1596,7 @@ CreateRenderManagerFromUnity(OSVR_ClientContext context) {
     }*/
     if( setupOSVR())
     {
-        if(setupGraphics(2560, 1440))
+        if(setupGraphics(gWidth, gHeight))
         {
             if(setupRenderManager())
             {
