@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1.0)
-project(osvrUnityAndroidRenderingPlugin)
+project(osvrUnityRenderingPlugin)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -38,33 +38,33 @@ if(WIN32)
 #    list(APPEND osvrUnityRenderingPlugin_SOURCES OsvrRenderingPlugin.def)
 endif()
 
-add_library(osvrUnityAndroidRenderingPlugin SHARED ${osvrUnityRenderingPlugin_SOURCES})
+add_library(osvrUnityRenderingPlugin SHARED ${osvrUnityRenderingPlugin_SOURCES})
 #set_target_properties(osvrUnityRenderingPlugin PROPERTIES LINK_FLAGS "/DEF:${CMAKE_CURRENT_SOURCE_DIR}/OsvrRenderingPlugin.def")
-#target_link_libraries(osvrUnityAndroidRenderingPlugin osvr::osvrClientKit)
-#target_link_libraries(osvrUnityAndroidRenderingPlugin osvrRenderManager::osvrRenderManager)
+#target_link_libraries(osvrUnityRenderingPlugin osvr::osvrClientKit)
+#target_link_libraries(osvrUnityRenderingPlugin osvrRenderManager::osvrRenderManager)
 #if(Boost_FOUND)
 #    target_include_directories(osvrUnityRenderingPlugin PRIVATE ${Boost_INCLUDE_DIRS})
 #    target_link_libraries(osvrUnityRenderingPlugin ${Boost_LIBRARIES})
 #endif()
 if (OPENGL_FOUND AND GLEW_FOUND)
-    target_include_directories(osvrUnityAndroidRenderingPlugin PRIVATE ${OPENGL_INCLUDE_DIRS})
-    target_link_libraries(osvrUnityAndroidRenderingPlugin ${OPENGL_LIBRARY} GLEW::GLEW JsonCpp::JsonCpp SDL2::SDL2)
+    target_include_directories(osvrUnityRenderingPlugin PRIVATE ${OPENGL_INCLUDE_DIRS})
+    target_link_libraries(osvrUnityRenderingPlugin ${OPENGL_LIBRARY} GLEW::GLEW JsonCpp::JsonCpp SDL2::SDL2)
     # Handle static glew.
     if(GLEW_LIBRARY MATCHES ".*s.lib")
-        target_compile_definitions(osvrUnityAndroidRenderingPlugin PRIVATE GLEW_STATIC)
+        target_compile_definitions(osvrUnityRenderingPlugin PRIVATE GLEW_STATIC)
     endif()
 endif()
 if (OPENGL_FOUND)
-    target_include_directories(osvrUnityAndroidRenderingPlugin PRIVATE ${OPENGL_INCLUDE_DIRS})
-    target_link_libraries(osvrUnityAndroidRenderingPlugin ${OPENGL_LIBRARY} JsonCpp::JsonCpp )
+    target_include_directories(osvrUnityRenderingPlugin PRIVATE ${OPENGL_INCLUDE_DIRS})
+    target_link_libraries(osvrUnityRenderingPlugin ${OPENGL_LIBRARY} JsonCpp::JsonCpp )
 endif()
 if(OPENGLES2_FOUND)
-    target_include_directories(osvrUnityAndroidRenderingPlugin PRIVATE ${OPENGLES2_INCLUDE_DIR})
-	target_link_libraries(osvrUnityAndroidRenderingPlugin PRIVATE ${OPENGLES2_LIBRARIES} JsonCpp::JsonCpp osvr::osvrClientKit osvrRenderManager::osvrRenderManager)
+    target_include_directories(osvrUnityRenderingPlugin PRIVATE ${OPENGLES2_INCLUDE_DIR})
+	target_link_libraries(osvrUnityRenderingPlugin PRIVATE ${OPENGLES2_LIBRARIES} JsonCpp::JsonCpp osvr::osvrClientKit osvrRenderManager::osvrRenderManager)
 endif()
 
 #${CONFIG_INSTALL_DIR}
 # Install docs, license, sample config
 install(TARGETS
-    osvrUnityAndroidRenderingPlugin
+    osvrUnityRenderingPlugin
     DESTINATION .)
