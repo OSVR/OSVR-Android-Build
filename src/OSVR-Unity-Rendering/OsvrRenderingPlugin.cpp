@@ -168,6 +168,27 @@ inline void //DebugLog(const char *str) {
 #endif // defined(ENABLE_LOGGING) && defined(ENABLE_LOGFILE)
 }
 */
+static JNIEnv* jniEnvironment = 0;
+    
+//this OnLoadd gets called automatically
+jint JNI_OnLoad(JavaVM* vm, void* reserved) {
+    jniEnvironment = 0;
+    vm->AttachCurrentThread(&jniEnvironment, 0);
+  return JNI_VERSION_1_6;
+}
+
+static jclass mainActivityClass;
+static jmethodID mainActivityClassConstructorMID;
+static jmethodID logMsgId;
+static jobject unityActivityClassInstance;
+/*
+void createJavaActivityClassObject(JNIEnv* jni_env) {
+  mainActivityClass = jni_env->FindClass("org/osvr/viking/MainActivity");         // find class definition
+  mainActivityClassConstructorMID = jni_env->GetMethodID(mainActivityClass, "<init>", "()V");      // find constructor method
+  logMsgId = jni_env->GetMethodID(mainActivityClass, "logMsg", "(Ljava/lang/String;)V");
+  unityActivityClassInstance = jni_env->NewGlobalRef(jni_env->NewObject(mainActivityClass, mainActivityClassConstructorMID));                    
+}
+*/
 
 inline osvr::renderkit::OSVR_ProjectionMatrix ConvertProjectionMatrix(::OSVR_ProjectionMatrix matrix)
     {
@@ -873,6 +894,17 @@ static bool setupGraphics(int width, int height) {
 	gProgram = createProgram(gVertexShader, gFragmentShader);
 	if (!gProgram) {
 		//LOGE("Could not create program.");
+        mainActivityClass = jniEnvironment->FindClass("org/osvr/osvrunityjni/OsvrJNIWrapper");  // try to find the class
+        if(mainActivityClass == nullptr) {
+            return false;
+        }
+        else {                                  // if class found, continue
+
+            jmethodID logmid = jniEnvironment->GetStaticMethodID(mainActivityClass, "logMsg", "(Ljava/lang/String;)V");  // find method
+             std::string stringy = "[OSVR-Unity-Android]  Could not create program.";
+                 jstring jstr2 = jniEnvironment->NewStringUTF(stringy.c_str());
+                jniEnvironment->CallStaticVoidMethod(mainActivityClass, logmid, jstr2);  
+        }
 		return false;
 	}
 	gvPositionHandle = glGetAttribLocation(gProgram, "vPosition");
@@ -1005,25 +1037,7 @@ static void stop() {
 }
 
 
-static JNIEnv* jniEnvironment = 0;
-    
-//this OnLoadd gets called automatically
-jint JNI_OnLoad(JavaVM* vm, void* reserved) {
-    jniEnvironment = 0;
-    vm->AttachCurrentThread(&jniEnvironment, 0);
-  return JNI_VERSION_1_6;
-}
 
-static jclass mainActivityClass;
-static jmethodID mainActivityClassConstructorMID;
-static jmethodID logMsgId;
-static jobject unityActivityClassInstance;
-void createJavaActivityClassObject(JNIEnv* jni_env) {
-  mainActivityClass = jni_env->FindClass("org/osvr/osvrunityandroid/MainActivity");         // find class definition
-  mainActivityClassConstructorMID = jni_env->GetMethodID(mainActivityClass, "<init>", "()V");      // find constructor method
-  logMsgId = jni_env->GetMethodID(mainActivityClass, "logMsg", "(Ljava/lang/String;)V");
-  unityActivityClassInstance = jni_env->NewGlobalRef(jni_env->NewObject(mainActivityClass, mainActivityClassConstructorMID));                    
-}
 ///////////////////////////////////////////////////////////////////////////////////
 
 void UNITY_INTERFACE_API ShutdownRenderManager() {
@@ -1044,7 +1058,8 @@ void UNITY_INTERFACE_API ShutdownRenderManager() {
 			glDeleteRenderbuffers(1, &depthBuffers[i]);
 		}
 		*/
-		//contextSet = false;
+        stop();
+		contextSet = false;
 		break;
 #endif
         default: break;
@@ -1207,7 +1222,7 @@ OnGraphicsDeviceEvent(UnityGfxDeviceEventType eventType) {
         
 #endif
 #if UNITY_LINUX
-mainActivityClass = jniEnvironment->FindClass("org/osvr/osvrunityandroid/MainActivity");  // try to find the class
+mainActivityClass = jniEnvironment->FindClass("org/osvr/osvrunityjni/OsvrJNIWrapper");  // try to find the class
     if(mainActivityClass == nullptr) {
         return;
     }
@@ -1219,6 +1234,15 @@ mainActivityClass = jniEnvironment->FindClass("org/osvr/osvrunityandroid/MainAct
             //cerr << "ERROR: method void mymain() not found !" << endl;
             return;
         else {
+            //load libs!
+          /*  jmethodID loadLibsMID = jniEnvironment->GetStaticMethodID(mainActivityClass, "loadLibraries", "()V");  // find method
+         if(loadLibsMID == nullptr)
+            //cerr << "ERROR: method void mymain() not found !" << endl;
+            return;
+        else {
+            
+            jniEnvironment->CallStaticVoidMethod(mainActivityClass, loadLibsMID);   
+        }*/
             
             jlong currentEglContextHandle = jniEnvironment->CallStaticLongMethod(mainActivityClass, setGlContextId);                      // call method
             long myLongValue = (long) currentEglContextHandle;
