@@ -74,7 +74,7 @@ static GLuint guTextureUniformId;
 static GLuint gvProjectionUniformId;
 static GLuint gvViewUniformId;
 static GLuint gvModelUniformId;
-static GLuint gframeBuffer;
+static GLuint gFrameBuffer;
 static GLuint gTextureID;
 static GLuint gLeftEyeTextureID;
 static GLuint gRightEyeTextureID;
@@ -97,6 +97,7 @@ static OSVR_RenderManager gRenderManager = nullptr;
 static OSVR_RenderManagerOpenGL gRenderManagerOGL = nullptr;
 static OSVR_RenderParams gRenderParams = { 0 };
 static std::vector<OSVR_RenderBufferOpenGL> buffers;
+static std::vector<OSVR_RenderTargetInfo> gRenderTargets;
 static bool contextSet = false;
 
 typedef struct OSVR_RenderTargetInfo {
@@ -132,8 +133,7 @@ static const char gVertexShader[] =
                     //"    gl_FragColor = texture2D(uTexture, texCoordinate);\n"
                     "}\n";
 
-static std::vector<OSVR_RenderTargetInfo> gRenderTargets;
-static GLuint gFrameBuffer;
+
 
 
 // RenderEvents
