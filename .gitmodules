@@ -29,3 +29,7 @@
 [submodule "src/OSVR-RenderManager"]
 	path = src/OSVR-RenderManager
 	url = https://github.com/sensics/OSVR-RenderManager.git
+[submodule "src/OSVR-Unity-Rendering"]
+	path = src/OSVR-Unity-Rendering
+	url = https://github.com/OSVR/OSVR-Unity-Rendering.git
+	branch = d3d_capi
