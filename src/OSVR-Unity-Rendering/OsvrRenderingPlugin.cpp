@@ -50,6 +50,14 @@ Sensics, Inc.
 #include <GLES2/gl2ext.h>
 #include <jni.h>
 
+// STRUCTS
+typedef struct OSVR_RenderTargetInfo {
+    GLuint colorBufferName;
+    GLuint depthBufferName;
+    GLuint frameBufferName;
+    GLuint renderBufferName; // @todo - do we need this?
+} OSVR_RenderTargetInfo;
+
 // VARIABLES
 static IUnityInterfaces *s_UnityInterfaces = nullptr;
 static IUnityGraphics *s_Graphics = nullptr;
@@ -99,13 +107,6 @@ static OSVR_RenderParams gRenderParams = { 0 };
 static std::vector<OSVR_RenderBufferOpenGL> buffers;
 static std::vector<OSVR_RenderTargetInfo> gRenderTargets;
 static bool contextSet = false;
-
-typedef struct OSVR_RenderTargetInfo {
-    GLuint colorBufferName;
-    GLuint depthBufferName;
-    GLuint frameBufferName;
-    GLuint renderBufferName; // @todo - do we need this?
-} OSVR_RenderTargetInfo;
 
 static const char gVertexShader[] =
             "uniform mat4 model;\n"
