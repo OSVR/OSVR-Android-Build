@@ -214,6 +214,7 @@ osvr_android_add_common_cmake_arg("-DOpenCV_DIR=${OpenCV_DIR}")
 # Indicate where osvr_json_to_c is for ease of use
 osvr_android_add_common_cmake_arg("-DOSVR_JSON_TO_C_COMMAND=${OSVR_JSON_TO_C_COMMAND}")
 
+
 ExternalProject_Add(OSVR-Core
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core"
     INSTALL_DIR "${ANDROID_INSTALL_DIR}"
@@ -247,7 +248,7 @@ add_ep_to_force(OSVR-RenderManager)
 ExternalProject_Add(OSVR-Unity-Rendering
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Unity-Rendering"
     INSTALL_DIR "${ANDROID_INSTALL_DIR}"
-    DEPENDS OSVR-Core OSVR-RenderManager#SDL2
+    DEPENDS OSVR-Core OSVR-RenderManager #SDL2
     CMAKE_GENERATOR "${ANDROID_GENERATOR}"
     CMAKE_ARGS
     ${COMMON_CMAKE_ARGS}

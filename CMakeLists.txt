@@ -37,7 +37,7 @@ if(NOT ANDROID_TOOLCHAIN_NAME AND ANDROID_ABI MATCHES "armeabi")
 endif()
 
 if(NOT ANDROID_NATIVE_API_LEVEL)
-    set(ANDROID_NATIVE_API_LEVEL "16" CACHE STRING "Android Native API Level")
+    set(ANDROID_NATIVE_API_LEVEL "24" CACHE STRING "Android Native API Level")
 endif()
 
 # Optional, externally-built osvr_json_to_c instance
