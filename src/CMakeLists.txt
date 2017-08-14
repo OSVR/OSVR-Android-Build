@@ -270,7 +270,17 @@ if(BUILD_SERVER_PLUGINS)
         CMAKE_ARGS
         ${COMMON_CMAKE_ARGS}
         BUILD_IN_SOURCE 0)
-	add_ep_to_force(android_sensor_tracker)
+    add_ep_to_force(android_sensor_tracker)
+
+	ExternalProject_Add(org_osvr_android_moverio
+        SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android_sensor_tracker/org_osvr_android_moverio"
+        INSTALL_DIR "${ANDROID_INSTALL_DIR}"
+        DEPENDS OSVR-Core
+        CMAKE_GENERATOR "${ANDROID_GENERATOR}"
+        CMAKE_ARGS
+        ${COMMON_CMAKE_ARGS}
+        BUILD_IN_SOURCE 0)
+    add_ep_to_force(org_osvr_android_moverio)
 
     ExternalProject_Add(jniImaging
         SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android_sensor_tracker/com_osvr_android_jniImaging"
