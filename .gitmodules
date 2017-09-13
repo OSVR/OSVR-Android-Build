@@ -11,7 +11,7 @@
 	url = https://github.com/vrpn/jsoncpp.git
 [submodule "src/boost"]
 	path = src/boost
-	url = https://github.com/MysticTreeGames/Boost-for-Android
+	url = https://github.com/OSVR/Boost-for-Android
 [submodule "src/hidapi"]
 	path = src/hidapi
 	url = https://github.com/signal11/hidapi
