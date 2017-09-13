@@ -139,7 +139,9 @@ if(EXISTS "${ANDROID_NDK}/RELEASE.TXT")
     endif()
 endif()
 
-set(ANDROID_TOOLCHAIN "${CMAKE_CURRENT_SOURCE_DIR}/android-cmake/android.toolchain.cmake")
+if(NOT ANDROID_TOOLCHAIN)
+    set(ANDROID_TOOLCHAIN "${CMAKE_CURRENT_SOURCE_DIR}/android-cmake/android.toolchain.cmake")
+endif()
 file(TO_NATIVE_PATH "${ANDROID_TOOLCHAIN}" ANDROID_TOOLCHAIN_NATIVE_PATH)
 
 set(ANDROID_INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/install")
