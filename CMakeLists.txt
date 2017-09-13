@@ -222,9 +222,9 @@ if(ANDROID_EXTRA_CXX_FLAGS)
     osvr_android_add_common_cmake_arg("-DCMAKE_CXX_FLAGS:STRING=${ANDROID_EXTRA_CXX_FLAGS}")
 endif()
 
-if(CMAKE_SYSROOT)
-    message(STATUS "Passing along CMAKE_SYSROOT=${CMAKE_SYSROOT} as CMAKE_SYSROOT")
-    osvr_android_add_common_cmake_arg("-DCMAKE_SYSROOT=${CMAKE_SYSROOT}")
+if(ANDROID_SYSROOT)
+    message(STATUS "Passing along ANDROID_SYSROOT=${ANDROID_SYSROOT} as ANDROID_SYSROOT")
+    osvr_android_add_common_cmake_arg("-DANDROID_SYSROOT=${ANDROID_SYSROOT}")
 endif()
 
 ###
