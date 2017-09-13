@@ -26,3 +26,6 @@
 [submodule "src/OSVR-RenderManager"]
 	path = src/OSVR-RenderManager
 	url = https://github.com/sensics/OSVR-RenderManager.git
+[submodule "src/boost"]
+	path = src/boost
+	url = https://github.com/OSVR/Boost-for-Android.git
