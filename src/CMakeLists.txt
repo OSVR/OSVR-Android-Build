@@ -220,7 +220,6 @@ ExternalProject_Add(OSVR-Core
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core"
     INSTALL_DIR "${ANDROID_INSTALL_DIR}"
     DEPENDS jsoncpp OpenCV ${osvr_dep_targets}
-    CONFIGURE_COMMAND find "${ANDROID_INSTALL_DIR}"
     CMAKE_GENERATOR "${ANDROID_GENERATOR}"
     CMAKE_ARGS
     ${COMMON_CMAKE_ARGS}
@@ -228,6 +227,7 @@ ExternalProject_Add(OSVR-Core
     "-Djsoncpp_DIR=${ANDROID_INSTALL_DIR}/lib/cmake/jsoncpp"
     "-DBoost_NO_SYSTEM_PATHS=1"
     "-DBoost_ADDITIONAL_VERSIONS=1.65.1"
+    "-DBoost_DEBUG=1"
     "-DBOOST_ROOT=${ANDROID_INSTALL_DIR}"
     "-DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}" # Have to pass in "host" python TODO is this actually needed?
     "-DLIBUSB1_LIBRARY=${ANDROID_INSTALL_DIR}/lib/libusb1.0.so" # TODO cmake should be able to find this for us.
