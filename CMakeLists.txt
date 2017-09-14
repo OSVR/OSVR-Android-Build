@@ -43,7 +43,7 @@ endif()
 # Optional, externally-built osvr_json_to_c instance
 
 set(CMAKE_MAP_IMPORTED_CONFIG_RELEASE RELWITHDEBINFO)
-find_package(osvr)
+find_package(osvr QUIET)
 unset(CMAKE_MAP_IMPORTED_CONFIG_RELEASE)
 if(NOT TARGET osvr::osvr_json_to_c)
     find_program(OSVR_JSON_TO_C_COMMAND NAMES osvr_json_to_c)
