@@ -21,6 +21,32 @@ function(add_ep_to_force _target)
     set(force_build_stamps "${force_build_stamps}" PARENT_SCOPE)
 endfunction()
 
+###
+# Conditionally build Boost
+###
+if(NOT ANDROID_CRYSTAX_NDK)
+    # In this case, we need boost.
+    if(WIN32)
+        # and msys bash
+        find_program(SH_COMMAND NAMES bash.exe dash.exe ash.sh sh.exe)
+        if(NOT SH_COMMAND)
+            message(FATAL_ERROR "Missing msys sh - needed to build Boost. Either set SH_COMMAND or use the CrystaX NDK (which includes boost)")
+        endif()
+        set(SH_COMMAND_ARGS --login -i)
+    else()
+        set(SH_COMMAND sh)
+        set(SH_COMMAND_ARGS)
+    endif()
+    ExternalProject_Add(Boost
+        SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/boost"
+        CONFIGURE_COMMAND ""
+        BUILD_COMMAND "${SH_COMMAND}" ${SH_COMMAND_ARGS} -c "./build-android.sh ${ANDROID_NDK}"
+        BUILD_IN_SOURCE 1)
+    # TODO call osvr_android_add_to_common_prefix_path - might be something like this
+    #ExternalProject_Get_Property(Boost SOURCE_DIR)
+    #osvr_android_add_to_common_prefix_path("${SOURCE_DIR}")
+endif()
+
 if(BUILD_SERVER)
     ###
     # Host (native, not Android) projects from source
@@ -135,32 +161,6 @@ set(OpenCV_DIR "${SOURCE_DIR}/sdk/native/jni")
 #    -DSDL_SHARED=FALSE
 #    -C ${CMAKE_CURRENT_SOURCE_DIR}/SDL-add-ons.cmake
 #)
-
-###
-# Conditionally build Boost
-###
-if(NOT ANDROID_CRYSTAX_NDK)
-    # In this case, we need boost.
-    if(WIN32)
-        # and msys bash
-        find_program(SH_COMMAND NAMES bash.exe dash.exe ash.sh sh.exe)
-        if(NOT SH_COMMAND)
-            message(FATAL_ERROR "Missing msys sh - needed to build Boost. Either set SH_COMMAND or use the CrystaX NDK (which includes boost)")
-        endif()
-        set(SH_COMMAND_ARGS --login -i)
-    else()
-        set(SH_COMMAND sh)
-        set(SH_COMMAND_ARGS)
-    endif()
-    ExternalProject_Add(Boost
-        SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/boost"
-        CONFIGURE_COMMAND ""
-        BUILD_COMMAND "${SH_COMMAND}" ${SH_COMMAND_ARGS} -c "./build-android.sh ${ANDROID_NDK}"
-        BUILD_IN_SOURCE 1)
-    # TODO call osvr_android_add_to_common_prefix_path - might be something like this
-    #ExternalProject_Get_Property(Boost SOURCE_DIR)
-    #osvr_android_add_to_common_prefix_path("${SOURCE_DIR}")
-endif()
 
 ###
 # Android builds from source
