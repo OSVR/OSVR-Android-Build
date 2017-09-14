@@ -41,6 +41,7 @@ if(NOT ANDROID_CRYSTAX_NDK)
         SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/boost"
         CONFIGURE_COMMAND ""
         BUILD_COMMAND "${SH_COMMAND}" ${SH_COMMAND_ARGS} -c "./build-android.sh ${ANDROID_NDK}"
+        INSTALL_COMMAND ""
         BUILD_IN_SOURCE 1)
     # TODO call osvr_android_add_to_common_prefix_path - might be something like this
     #ExternalProject_Get_Property(Boost SOURCE_DIR)
