@@ -46,6 +46,7 @@ if(NOT ANDROID_CRYSTAX_NDK)
     # TODO call osvr_android_add_to_common_prefix_path - might be something like this
     #ExternalProject_Get_Property(Boost SOURCE_DIR)
     #osvr_android_add_to_common_prefix_path("${SOURCE_DIR}")
+    list(APPEND osvr_dep_targets Boost)
 endif()
 
 if(BUILD_SERVER)
@@ -224,6 +225,7 @@ ExternalProject_Add(OSVR-Core
     ${COMMON_CMAKE_ARGS}
     "-Dlibfunctionality_DIR=${ANDROID_INSTALL_DIR}/lib/cmake/libfunctionality"
     "-Djsoncpp_DIR=${ANDROID_INSTALL_DIR}/lib/cmake/jsoncpp"
+    "-DBOOST_ROOT=${ANDROID_INSTALL_DIR}"
     "-DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}" # Have to pass in "host" python TODO is this actually needed?
     "-DLIBUSB1_LIBRARY=${ANDROID_INSTALL_DIR}/lib/libusb1.0.so" # TODO cmake should be able to find this for us.
     "-DVRPN_HIDAPI_SOURCE_ROOT=${CMAKE_CURRENT_SOURCE_DIR}/hidapi" # Let VRPN build HIDAPI for us.
