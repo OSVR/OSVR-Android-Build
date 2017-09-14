@@ -223,6 +223,7 @@ ExternalProject_Add(OSVR-Core
     CMAKE_ARGS
     ${COMMON_CMAKE_ARGS}
     "-Dlibfunctionality_DIR=${ANDROID_INSTALL_DIR}/lib/cmake/libfunctionality"
+    "-Djsoncpp_DIR=${ANDROID_INSTALL_DIR}/lib/cmake/jsoncpp"
     "-DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}" # Have to pass in "host" python TODO is this actually needed?
     "-DLIBUSB1_LIBRARY=${ANDROID_INSTALL_DIR}/lib/libusb1.0.so" # TODO cmake should be able to find this for us.
     "-DVRPN_HIDAPI_SOURCE_ROOT=${CMAKE_CURRENT_SOURCE_DIR}/hidapi" # Let VRPN build HIDAPI for us.
