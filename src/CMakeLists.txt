@@ -229,6 +229,8 @@ ExternalProject_Add(OSVR-Core
     "-DBoost_ADDITIONAL_VERSIONS=1.65.1"
     "-DBoost_DEBUG=1"
     "-DBOOST_ROOT=${ANDROID_INSTALL_DIR}"
+    "-DBOOST_INCLUDEDIR=${ANDROID_INSTALL_DIR}/include"
+    "-DBOOST_LIBRARYDIR=${ANDROID_INSTALL_DIR}/lib"
     "-DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}" # Have to pass in "host" python TODO is this actually needed?
     "-DLIBUSB1_LIBRARY=${ANDROID_INSTALL_DIR}/lib/libusb1.0.so" # TODO cmake should be able to find this for us.
     "-DVRPN_HIDAPI_SOURCE_ROOT=${CMAKE_CURRENT_SOURCE_DIR}/hidapi" # Let VRPN build HIDAPI for us.
