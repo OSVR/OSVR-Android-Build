@@ -230,6 +230,7 @@ ExternalProject_Add(OSVR-Core
     "-DBoost_DEBUG=1"
     "-DBOOST_ROOT=${ANDROID_INSTALL_DIR}"
     "-DBOOST_INCLUDEDIR=${ANDROID_INSTALL_DIR}/include"
+    "-DBoost_INCLUDE_DIR=${ANDROID_INSTALL_DIR}/include/boost-1_65_1"
     "-DBOOST_LIBRARYDIR=${ANDROID_INSTALL_DIR}/lib"
     "-DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}" # Have to pass in "host" python TODO is this actually needed?
     "-DLIBUSB1_LIBRARY=${ANDROID_INSTALL_DIR}/lib/libusb1.0.so" # TODO cmake should be able to find this for us.
