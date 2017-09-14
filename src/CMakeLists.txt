@@ -45,6 +45,8 @@ if(NOT ANDROID_CRYSTAX_NDK)
     # TODO call osvr_android_add_to_common_prefix_path - might be something like this
     #ExternalProject_Get_Property(Boost SOURCE_DIR)
     #osvr_android_add_to_common_prefix_path("${SOURCE_DIR}")
+else()
+    add_custom_target(Boost)
 endif()
 
 if(BUILD_SERVER)
@@ -79,7 +81,7 @@ if(BUILD_SERVER)
         list(APPEND HOST_PREFIX_PATH "${HOST_INSTALL_DIR}")
 
         ExternalProject_Add(osvr_json_to_c_host
-            DEPENDS jsoncpp_host
+            DEPENDS jsoncpp_host Boost
             SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/osvr_json_to_c"
             CMAKE_ARGS
             "-DCMAKE_INSTALL_PREFIX=${HOST_INSTALL_DIR}"
