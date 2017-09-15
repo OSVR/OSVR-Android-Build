@@ -37,7 +37,7 @@ if(NOT ANDROID_TOOLCHAIN_NAME AND ANDROID_ABI MATCHES "armeabi")
 endif()
 
 if(NOT ANDROID_NATIVE_API_LEVEL)
-    set(ANDROID_NATIVE_API_LEVEL "16" CACHE STRING "Android Native API Level")
+    set(ANDROID_NATIVE_API_LEVEL "24" CACHE STRING "Android Native API Level")
 endif()
 
 # Optional, externally-built osvr_json_to_c instance
@@ -74,6 +74,8 @@ foreach(opt ${OSVR_BUILD_OPTIONS})
 endforeach()
 
 list(APPEND OSVR_CORE_PASSTHROUGH_OPTIONS "-DOSVR_COMMON_IN_PROCESS_IMAGING=1")
+list(APPEND OSVR_CORE_PASSTHROUGH_OPTIONS "-DBUILD_CLIENT_EXAMPLES=0")
+list(APPEND OSVR_CORE_PASSTHROUGH_OPTIONS "-DBUILD_SERVER_EXAMPLES=0")
 
 ###
 # NDK finding - using environment and CMake variables as a hint

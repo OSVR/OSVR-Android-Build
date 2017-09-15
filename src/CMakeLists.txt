@@ -214,6 +214,7 @@ osvr_android_add_common_cmake_arg("-DOpenCV_DIR=${OpenCV_DIR}")
 # Indicate where osvr_json_to_c is for ease of use
 osvr_android_add_common_cmake_arg("-DOSVR_JSON_TO_C_COMMAND=${OSVR_JSON_TO_C_COMMAND}")
 
+
 ExternalProject_Add(OSVR-Core
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core"
     INSTALL_DIR "${ANDROID_INSTALL_DIR}"
@@ -244,6 +245,22 @@ ExternalProject_Add(OSVR-RenderManager
     BUILD_IN_SOURCE 0)
 add_ep_to_force(OSVR-RenderManager)
 
+ExternalProject_Add(OSVR-Unity-Rendering
+    SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Unity-Rendering"
+    INSTALL_DIR "${ANDROID_INSTALL_DIR}"
+    DEPENDS OSVR-Core OSVR-RenderManager #SDL2
+    CMAKE_GENERATOR "${ANDROID_GENERATOR}"
+    CMAKE_ARGS
+    ${COMMON_CMAKE_ARGS}
+    "-DEIGEN3_INCLUDE_DIR:PATH=${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core/vendor/eigen"
+    "-DVRPN_INCLUDE_DIR:PATH=${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core/vendor/vrpn"
+    "-DVRPN_LIBRARY:PATH=${CMAKE_CURRENT_BINARY_DIR}/OSVR-Core-prefix/src/OSVR-Core-build/bin/libvrpnserver.a"
+    "-DQUATLIB_INCLUDE_DIR:PATH=${CMAKE_CURRENT_SOURCE_DIR}/OSVR-Core/vendor/vrpn/quat"
+    "-DQUATLIB_LIBRARY:PATH=${CMAKE_CURRENT_BINARY_DIR}/OSVR-Core-prefix/src/OSVR-Core-build/bin/libquat.a"
+    "-DCMAKE_CXX_FLAGS:STRING=-std=c++11"
+    BUILD_IN_SOURCE 0)
+add_ep_to_force(OSVR-Unity-Rendering)
+
 if(BUILD_SERVER_PLUGINS)
     ExternalProject_Add(android_sensor_tracker
         SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android_sensor_tracker/com_osvr_android_sensorTracker"
@@ -253,7 +270,17 @@ if(BUILD_SERVER_PLUGINS)
         CMAKE_ARGS
         ${COMMON_CMAKE_ARGS}
         BUILD_IN_SOURCE 0)
-	add_ep_to_force(android_sensor_tracker)
+    add_ep_to_force(android_sensor_tracker)
+
+	ExternalProject_Add(org_osvr_android_moverio
+        SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android_sensor_tracker/org_osvr_android_moverio"
+        INSTALL_DIR "${ANDROID_INSTALL_DIR}"
+        DEPENDS OSVR-Core
+        CMAKE_GENERATOR "${ANDROID_GENERATOR}"
+        CMAKE_ARGS
+        ${COMMON_CMAKE_ARGS}
+        BUILD_IN_SOURCE 0)
+    add_ep_to_force(org_osvr_android_moverio)
 
     ExternalProject_Add(jniImaging
         SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android_sensor_tracker/com_osvr_android_jniImaging"
