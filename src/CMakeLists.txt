@@ -291,6 +291,17 @@ if(BUILD_SERVER_PLUGINS)
         ${COMMON_CMAKE_ARGS}
         BUILD_IN_SOURCE 0)
     add_ep_to_force(jniImaging)
+
+    ExternalProject_Add(org_osvr_android_hdk2jni
+        SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android_sensor_tracker/org_osvr_android_hdk2jni"
+        INSTALL_DIR "${ANDROID_INSTALL_DIR}"
+        DEPENDS OSVR-Core
+        CMAKE_GENERATOR "${ANDROID_GENERATOR}"
+        CMAKE_ARGS
+        ${COMMON_CMAKE_ARGS}
+        "-DEIGEN3_INCLUDE_DIR:PATH=${CMAKE_CURRENT_SOURCE_DIR}/android_sensor_tracker/vendor/eigen"
+        BUILD_IN_SOURCE 0)
+    add_ep_to_force(org_osvr_android_hdk2jni)
 endif()
 
 # Add the custom target to delete the build stamps
